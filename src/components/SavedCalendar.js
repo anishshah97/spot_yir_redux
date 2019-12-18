@@ -33,7 +33,7 @@ export class SavedCalendar extends Component {
             let max_date = formatDate(this.props.Data.max_date)
             return (
                 <div>
-                    <h1 className={css(styles.bounceInDown)}> Do you even save songs bro? </h1>
+                    <h1 className={css(styles.bounceInDown)}> Spotify Secret Social </h1>
                             <div className={css(styles.bounceInUp)}>
                                 <ResponsiveCalendar
                                     data={this.props.Data.cal_data}

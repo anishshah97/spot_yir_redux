@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { storeSpotToken } from "../actions/Spotify";
-import { authEndpoint, clientId, redirectUri, scopes } from "../utils/spotify_config";
+//import { authEndpoint, clientId, redirectUri, scopes } from "../utils/spotify_config";
 import hash from "../utils/token_hash"
 import Button from '@material-ui/core/Button';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -30,9 +30,7 @@ export class Login extends Component {
                     <Button 
                         variant="contained" 
                         color="primary"
-                        href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-                            "%20"
-                        )}&response_type=token&show_dialog=true`}
+                        href={`${process.env.REACT_APP_SPOT_AUTH_END}?client_id=${process.env.REACT_APP_SPOT_CLID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=${process.env.REACT_APP_SPOT_SCOPES}&response_type=token&show_dialog=true`}
                         onClick = {storeSpotToken}
                     >
                     Login to Spotify

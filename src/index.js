@@ -6,6 +6,10 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 ReactDOM.render(
   <Provider store={configureStore()}>
     <App />
