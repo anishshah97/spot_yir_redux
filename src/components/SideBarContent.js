@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import MaterialTitlePanel from "./MaterialPanel";
+import PlaylistMediaCard from "./PlaylistMediaCard"
 
 const styles = {
   sidebar: {
@@ -34,9 +35,7 @@ const SidebarContent = props => {
 
   for (let ind = 0; ind < 10; ind++) {
     links.push(
-      <a key={ind} href="#" style={styles.sidebarLink}>
-        Mock menu item {ind}
-      </a>
+      <PlaylistMediaCard></PlaylistMediaCard>
     );
   }
 
@@ -45,9 +44,6 @@ const SidebarContent = props => {
       <div style={styles.content}>
         <a href="#" style={styles.sidebarLink}>
           Home
-        </a>
-        <a href="#" style={styles.sidebarLink}>
-          Responsive Example
         </a>
         <div style={styles.divider} />
         {links}
