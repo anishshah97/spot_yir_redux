@@ -9,7 +9,6 @@ import MaterialTitlePanel from "../components/MaterialPanel";
 import SidebarContent from "../components/SideBarContent";
 import FullPageLoading from "../components/FullPageLoading"
 
-
 const styles = {
   contentHeaderMenuLink: {
     textDecoration: "none",
@@ -100,15 +99,18 @@ export class Main extends Component {
             );
         
             const sidebarProps = {
-            sidebar,
-            docked: this.state.docked,
-            open: this.state.open,
-            onSetOpen: this.onSetOpen
+                sidebar,
+                docked: this.state.docked,
+                open: this.state.open,
+                onSetOpen: this.onSetOpen
             };
         
             return (
-            <Sidebar {...sidebarProps}>
-                <MaterialTitlePanel title={contentHeader}>
+            // Sidebar with own styles in content, uses same material title
+            <Sidebar {...sidebarProps} >
+                {/* Main Header */}
+                <MaterialTitlePanel title={contentHeader}> 
+                {/* Actual main body content use in reference to router here? */}
                 <div style={styles.content}>
                     <SavedCalendar></SavedCalendar>
                 </div>

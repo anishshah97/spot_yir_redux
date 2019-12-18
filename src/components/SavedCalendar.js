@@ -2,21 +2,16 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { formatDate } from "../utils/data_prep"
 import { ResponsiveCalendar } from '@nivo/calendar'
-import { bounceInUp, bounceInDown } from 'react-animations'
+import { fadeInRight } from 'react-animations'
 import { StyleSheet, css } from 'aphrodite';
 
-const styles = StyleSheet.create({
-    bounceInUp: {
-      animationName: bounceInUp,
-      animationDuration: '1.5s',
+const ani_styles = StyleSheet.create({
+    fadeInRight: {
+      animationName: fadeInRight,
+      animationDuration: '0.5s',
       height: 700
-    },
-    bounceInDown: {
-        animationName: bounceInDown,
-        animationDuration: '1.5s'
     }
-
-  })
+})
 
 
 
@@ -28,7 +23,7 @@ export class SavedCalendar extends Component {
         let max_date = formatDate(this.props.Data.max_date)
         return (
             <div>
-                <div className={css(styles.bounceInUp)}>
+                <div className={css(ani_styles.fadeInRight)}>
                     <ResponsiveCalendar
                         data={this.props.Data.cal_data}
                         from={min_date}
