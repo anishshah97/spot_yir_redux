@@ -1,3 +1,7 @@
+[![CircleCI](https://circleci.com/gh/anishshah97/spot_yir_redux.svg?style=svg)](https://circleci.com/gh/anishshah97/spot_yir_redux)
+
+[![Maintainability](https://api.codeclimate.com/v1/badges/4314642d2791b4226836/maintainability)](https://codeclimate.com/github/anishshah97/spot_yir_redux/maintainability)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
