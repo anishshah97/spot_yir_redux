@@ -2,12 +2,16 @@ import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { fetchSavedSongs, fetchSavedSongInfo, fetchPlaylists } from "../actions/Spotify";
 import SpotifyWebApi from 'spotify-web-api-js'
-import SavedCalendar from "../components/SavedCalendar"
-import {storeCalData, storeSidebarPlaylist} from "../actions/DataFormat"
+import {storeCalData} from "../actions/DataFormat"
 import Sidebar from "react-sidebar";
 import MaterialTitlePanel from "../components/MaterialPanel";
 import SidebarContent from "../components/SideBarContent";
 import FullPageLoading from "../components/FullPageLoading"
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { green } from '@material-ui/core/colors';
+import Button from '@material-ui/core/Button';
+import SavedSongsPage from "../pages/SavedSongsPage"
+import PlaylistPage from "../pages/PlaylistPage"
 
 const styles = {
   contentHeaderMenuLink: {
@@ -19,6 +23,12 @@ const styles = {
     padding: "16px"
   }
 };
+
+const theme = createMuiTheme({
+    palette: {
+      primary: green,
+    },
+  });
 
 const mql = window.matchMedia(`(min-width: 800px)`);
 
@@ -87,13 +97,16 @@ export class Main extends Component {
             const contentHeader = (
             <span>
                 {!this.state.docked && (
-                <a
-                    onClick={this.toggleOpen}
-                    href="#"
-                    style={styles.contentHeaderMenuLink}
-                >
-                    =
-                </a>
+                <ThemeProvider theme={theme}>
+                    <Button
+                        onClick={this.toggleOpen}
+                        style={styles.contentHeaderMenuLink}
+                        variant="contained" 
+                        color="primary"
+                    >
+                        =
+                    </Button>
+                </ThemeProvider>
                 )}
                 <span>Spotify Secret Social</span>
             </span>
@@ -113,7 +126,8 @@ export class Main extends Component {
                 <MaterialTitlePanel title={contentHeader}> 
                 {/* Use playlist selection as a flag? */}
                 <div style={styles.content}>
-                    <SavedCalendar></SavedCalendar>
+                    {this.props.Data.playlist_selection === "" && (<SavedSongsPage></SavedSongsPage>)}
+                    {this.props.Data.playlist_selection !== "" && (<PlaylistPage></PlaylistPage>)}
                 </div>
                 </MaterialTitlePanel>
             </Sidebar>
