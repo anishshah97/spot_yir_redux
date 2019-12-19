@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { fetchSavedSongs, fetchSavedSongInfo } from "../actions/Spotify";
+import { fetchSavedSongs, fetchSavedSongInfo, fetchPlaylists } from "../actions/Spotify";
 import SpotifyWebApi from 'spotify-web-api-js'
 import SavedCalendar from "../components/SavedCalendar"
-import {storeCalData} from "../actions/DataFormat"
+import {storeCalData, storeSidebarPlaylist} from "../actions/DataFormat"
 import Sidebar from "react-sidebar";
 import MaterialTitlePanel from "../components/MaterialPanel";
 import SidebarContent from "../components/SideBarContent";
@@ -44,36 +44,38 @@ export class Main extends Component {
             //Are the awaits necessary?
             SpotifyAPI.setAccessToken(this.props.Spotify.spot_token)
             await this.props.fetchSavedSongs(SpotifyAPI)
+            await this.props.fetchPlaylists(SpotifyAPI)
             await this.props.storeCalData(this.props.Spotify.saved_songs)
+            await this.props.storeSidebarPlaylist(this.props.Spotify.followed_playlists)
             await this.props.fetchSavedSongInfo(SpotifyAPI, this.props.Spotify.saved_songs) //Should i pass it in or refer to it in the redux action?
         }
     }
     
     componentWillMount() {
-    mql.addListener(this.mediaQueryChanged);
+        mql.addListener(this.mediaQueryChanged);
     }
 
     componentWillUnmount() {
-    mql.removeListener(this.mediaQueryChanged);
+        mql.removeListener(this.mediaQueryChanged);
     }
 
     onSetOpen(open) {
-    this.setState({ open });
+        this.setState({ open });
     }
 
     mediaQueryChanged() {
-    this.setState({
-        docked: mql.matches,
-        open: false
-    });
+        this.setState({
+            docked: mql.matches,
+            open: false
+        });
     }
 
     toggleOpen(ev) {
-    this.setState({ open: !this.state.open });
+        this.setState({ open: !this.state.open });
 
-    if (ev) {
-        ev.preventDefault();
-    }
+        if (ev) {
+            ev.preventDefault();
+        }
     }
     
     render() {
@@ -129,7 +131,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     fetchSavedSongs: (handler) => dispatch(fetchSavedSongs(handler)),
     fetchSavedSongInfo: (handler, tracks) => dispatch(fetchSavedSongInfo(handler, tracks)),
-    storeCalData: (tracks) => dispatch(storeCalData(tracks))
+    storeCalData: (tracks) => dispatch(storeCalData(tracks)),
+    fetchPlaylists: (handler) => dispatch(fetchPlaylists(handler)),
+    storeSidebarPlaylist: (playlists) => dispatch(storeSidebarPlaylist(playlists))
   });
   
 export default connect(

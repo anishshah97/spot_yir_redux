@@ -1,7 +1,8 @@
-import React from "react";
 import PropTypes from "prop-types";
 import MaterialTitlePanel from "./MaterialPanel";
 import PlaylistMediaCard from "./PlaylistMediaCard"
+import { connect } from "react-redux"
+import React, { Component } from 'react'
 
 const styles = {
   sidebar: {
@@ -26,34 +27,39 @@ const styles = {
   }
 };
 
-const SidebarContent = props => {
-  const style = props.style
-    ? { ...styles.sidebar, ...props.style }
+export class SideBarContent extends Component {
+  render() {
+
+    const style = this.props.style
+    ? { ...styles.sidebar, ...this.props.style }
     : styles.sidebar;
 
-  const links = [];
+    const links = [];
 
-  for (let ind = 0; ind < 10; ind++) {
-    links.push(
-      <PlaylistMediaCard></PlaylistMediaCard>
+    for (let ind = 0; ind < 10; ind++) {
+      links.push(
+        <PlaylistMediaCard data={ind}></PlaylistMediaCard>
+      );
+    }
+
+    return (
+      <MaterialTitlePanel title="Menu" style={style}>
+        <div style={styles.content}>
+          <a href="#" style={styles.sidebarLink}>
+            Home
+          </a>
+          <div style={styles.divider} />
+          {links}
+        </div>
+      </MaterialTitlePanel>
     );
   }
+}
 
-  return (
-    <MaterialTitlePanel title="Menu" style={style}>
-      <div style={styles.content}>
-        <a href="#" style={styles.sidebarLink}>
-          Home
-        </a>
-        <div style={styles.divider} />
-        {links}
-      </div>
-    </MaterialTitlePanel>
-  );
-};
+const mapStateToProps = state => ({
+  ...state
+});
 
-SidebarContent.propTypes = {
-  style: PropTypes.object
-};
-
-export default SidebarContent;
+export default connect(
+  mapStateToProps
+)(SideBarContent);

@@ -12,7 +12,12 @@ export default (state = {
     //Audio features of saved songs
     saved_song_details : [],
     saved_song_details_loading: false,
-    saved_song_details_error: false
+    saved_song_details_error: false,
+
+    //My Playlists
+    followed_playlists : [],
+    followed_playlists_loading: false,
+    followed_playlists_error: false
     
   }, action) => {
     switch (action.type) {
@@ -54,6 +59,22 @@ export default (state = {
         return Object.assign({}, state, {
           saved_song_details_loading: false,
           saved_song_details_error: true
+        })
+
+      //Deal with from promises from playlists
+      case "FETCH_PLAYLISTS_PENDING":
+        return Object.assign({}, state, {
+          followed_playlists_loading: true
+        });
+      case "FETCH_PLAYLISTS_FULFILLED":
+        return Object.assign({}, state, {
+          followed_playlists: action.payload,
+          followed_playlists_loading : false
+        })
+      case "FETCH_PLAYLISTS_REJECTED":
+        return Object.assign({}, state, {
+          followed_playlists_loading: false,
+          followed_playlists_error: true
         })
 
       

@@ -4,18 +4,27 @@ export default (state = {
     cal_data: [],
     max_date: new Date(),
     min_date: new Date(),
-    up_bound: 0
+    up_bound: 0,
+
+    //Playlist Sidebar Data
+    sidebar_playlist: []
     
   }, action) => {
     switch (action.type) {
       
-      //Store Token
+      //Store Cal
       case "STORE_CALENDAR_DATA":
         return Object.assign({}, state, {
           cal_data : action.cal_data,
           max_date: action.max_date,
           min_date: action.min_date,
           up_bound: action.up_bound
+        });
+
+      //Store sidebarplaylist
+      case "STORE_SIDEBAR_PLAYLIST":
+        return Object.assign({}, state, {
+          sidebar_playlist: action.sidebar_playlist
         });
 
       default:
