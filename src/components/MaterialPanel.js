@@ -15,6 +15,7 @@ const styles = {
   }
 };
 
+//Keep a constant or make it a class?
 const MaterialTitlePanel = props => {
   const rootStyle = props.style
     ? { ...styles.root, ...props.style }

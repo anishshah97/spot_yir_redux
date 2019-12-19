@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import SongGrid from "../components/SongGrid"
+import SongGrid from "../containers/SongGrid"
 
 export default class PlaylistPage extends Component {
     render() {

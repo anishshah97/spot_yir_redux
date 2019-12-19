@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { fetchSavedSongs, fetchSavedSongInfo, fetchPlaylists } from "../actions/Spotify";
+import { fetchSavedSongs, fetchSavedSongInfo, fetchPlaylists, fetchPlaylistTracks } from "../actions/Spotify";
 import SpotifyWebApi from 'spotify-web-api-js'
 import {storeCalData} from "../actions/DataFormat"
 import Sidebar from "react-sidebar";
 import MaterialTitlePanel from "../components/MaterialPanel";
-import SidebarContent from "../components/SideBarContent";
+import SidebarContent from "./SideBarContent";
 import FullPageLoading from "../components/FullPageLoading"
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
@@ -55,8 +55,9 @@ export class Main extends Component {
             SpotifyAPI.setAccessToken(this.props.Spotify.spot_token)
             await this.props.fetchSavedSongs(SpotifyAPI)
             await this.props.fetchPlaylists(SpotifyAPI)
-            await this.props.storeCalData(this.props.Spotify.saved_songs)
-            await this.props.fetchSavedSongInfo(SpotifyAPI, this.props.Spotify.saved_songs) //Should i pass it in or refer to it in the redux action?
+            await setTimeout(this.props.fetchPlaylistTracks(SpotifyAPI, this.props.Spotify.followed_playlists), 2000)
+            await setTimeout(this.props.storeCalData(this.props.Spotify.saved_songs), 2000)
+            await setTimeout(this.props.fetchSavedSongInfo(SpotifyAPI, this.props.Spotify.saved_songs), 2000) //Should i pass it in or refer to it in the redux action?
         }
     }
     
@@ -146,6 +147,7 @@ const mapDispatchToProps = dispatch => ({
     fetchSavedSongInfo: (handler, tracks) => dispatch(fetchSavedSongInfo(handler, tracks)),
     storeCalData: (tracks) => dispatch(storeCalData(tracks)),
     fetchPlaylists: (handler) => dispatch(fetchPlaylists(handler)),
+    fetchPlaylistTracks: (handler, playlists) => dispatch(fetchPlaylistTracks(handler, playlists))
   });
   
 export default connect(

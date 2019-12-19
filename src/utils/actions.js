@@ -116,3 +116,29 @@ export async function getPlaylists(spotifyAPIHandler) {
     }))
 }
 
+export async function getPlaylistTracks(handler, playlists) {
+    
+    async function collectPlaylistTracks(playlist){
+        var options = {limit: 100, offset: 0}
+        return await handler.getPlaylistTracks(playlist.id, options=options)
+        .then(async function (resp){
+            const results = []
+            results.push(resp.items)
+            while (resp.next) {
+                options.offset = resp.offset+100
+                resp = await handler.getPlaylistTracks(playlist.id, options = options)
+                results.push(resp.items);
+            }
+            var playlist_tracks = [].concat.apply([], results)
+            return playlist_tracks
+        })
+    }
+
+    let playlist_tracks = playlists.map(collectPlaylistTracks, {handler : handler})
+    console.log(playlist_tracks)
+
+    //Add in a step to add ID for easy looking?
+
+    return(Promise.all(playlist_tracks))
+}
+

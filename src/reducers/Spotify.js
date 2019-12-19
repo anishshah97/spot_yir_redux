@@ -17,7 +17,12 @@ export default (state = {
     //My Playlists
     followed_playlists : [],
     followed_playlists_loading: false,
-    followed_playlists_error: false
+    followed_playlists_error: false,
+
+    //My Playlist Tracks
+    playlist_tracks : [],
+    playlist_tracks_loading: false,
+    playlist_tracks_error: false
     
   }, action) => {
     switch (action.type) {
@@ -75,6 +80,22 @@ export default (state = {
         return Object.assign({}, state, {
           followed_playlists_loading: false,
           followed_playlists_error: true
+        })
+
+      //Deal with from promises from playlist tracks
+      case "FETCH_PLAYLIST_TRACKS_PENDING":
+        return Object.assign({}, state, {
+          playlist_tracks_loading: true
+        });
+      case "FETCH_PLAYLIST_TRACKS_FULFILLED":
+        return Object.assign({}, state, {
+          playlist_tracks: action.payload,
+          playlist_tracks_loading : false
+        })
+      case "FETCH_PLAYLIST_TRACKS_REJECTED":
+        return Object.assign({}, state, {
+          playlist_tracks_loading: false,
+          playlist_tracks_error: true
         })
 
       

@@ -1,8 +1,8 @@
-import MaterialTitlePanel from "./MaterialPanel";
-import PlaylistMediaCard from "./PlaylistMediaCard"
+import MaterialTitlePanel from "../components/MaterialPanel";
+import PlaylistMediaCard from "../components/PlaylistMediaCard"
 import { connect } from "react-redux"
 import React, { Component } from 'react'
-import FullPageLoading from "./FullPageLoading"
+import FullPageLoading from "../components/FullPageLoading"
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
