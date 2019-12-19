@@ -8,8 +8,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 # `Inspiration`
 
-[Spotify Wrapped](https://www.spotify.com/is/wrapped/)
-Using the [Spotify API](https://developer.spotify.com/documentation/web-api/reference/) I wanted to develop a dashboard with more comprehensive statistics for users that can show their relationship with music.
+With the popularity of [Spotify Wrapped](https://www.spotify.com/is/wrapped/),
+using the [Spotify API](https://developer.spotify.com/documentation/web-api/reference/) I wanted to develop a dashboard with more comprehensive statistics for users that can show their relationship with music.
 
 This also served as the basis for my learning of front-end.
 
