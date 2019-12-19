@@ -4,7 +4,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-[Current website on Heroku](https://spot-yir.heroku.com)
+[Current website on Heroku](https://spot-yir.herokuapp.com)
 
 # `Inspiration`
 
