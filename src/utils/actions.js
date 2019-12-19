@@ -87,8 +87,8 @@ export async function collectTrackStats(handler, tracks) {
 
         for(let i=0; i<track_data.length; i++) {
         data.push({
-        ...track_data[i], 
-        ...(track_stats.find((itmInner) => itmInner.id === track_data[i].id))}
+            ...track_data[i], 
+            ...(track_stats.find((itmInner) => itmInner.id === track_data[i].id))}
         );
         }
         return data
@@ -115,3 +115,4 @@ export async function getPlaylists(spotifyAPIHandler) {
         return followed_playlists
     }))
 }
+

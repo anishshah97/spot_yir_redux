@@ -1,8 +1,13 @@
-import PropTypes from "prop-types";
 import MaterialTitlePanel from "./MaterialPanel";
 import PlaylistMediaCard from "./PlaylistMediaCard"
 import { connect } from "react-redux"
 import React, { Component } from 'react'
+import FullPageLoading from "./FullPageLoading"
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { green } from '@material-ui/core/colors';
+import Button from '@material-ui/core/Button';
+import {storePlaylistSelection} from "../actions/DataFormat"
+
 
 const styles = {
   sidebar: {
@@ -13,7 +18,8 @@ const styles = {
     display: "block",
     padding: "16px 0px",
     color: "#757575",
-    textDecoration: "none"
+    textDecoration: "none",
+    width: "100%"
   },
   divider: {
     margin: "8px 0",
@@ -27,32 +33,66 @@ const styles = {
   }
 };
 
+const theme = createMuiTheme({
+    palette: {
+      primary: green,
+    },
+  });
+
 export class SideBarContent extends Component {
+
+  handleClick(){
+    this.props.storePlaylistSelection("")
+  }
+  
   render() {
+    if(this.props.Spotify.followed_playlists.length === 0){
+      return (<FullPageLoading></FullPageLoading>)
+    }
+    else{
+      const style = this.props.style
+      ? { ...styles.sidebar, ...this.props.style }
+      : styles.sidebar;
 
-    const style = this.props.style
-    ? { ...styles.sidebar, ...this.props.style }
-    : styles.sidebar;
+      let links = this.props.Spotify.followed_playlists.map(
+        function(item){
+          return (
+            {
+              image: item.images,
+              id: item.id,
+              name: item.name,
+              total_tracks: item.tracks.total
+            }
+          )
+        }
+      ).map(
+        function(playlist){
+          return(
+            <PlaylistMediaCard data={playlist}></PlaylistMediaCard>
+          )
+        }
+      )
 
-    const links = [];
 
-    for (let ind = 0; ind < 10; ind++) {
-      links.push(
-        <PlaylistMediaCard data={ind}></PlaylistMediaCard>
+      return (
+          <MaterialTitlePanel title="Menu" style={style}>
+            <div style={styles.content}>
+            <ThemeProvider theme={theme}>
+                <Button 
+                  style={styles.sidebarLink}
+                  variant="contained" 
+                  color="primary"
+                  onClick = {this.handleClick.bind(this)}
+                >
+                  Home
+                </Button>
+            </ThemeProvider>
+              <div style={styles.divider} />
+              {links}
+            </div>
+          </MaterialTitlePanel>
       );
     }
-
-    return (
-      <MaterialTitlePanel title="Menu" style={style}>
-        <div style={styles.content}>
-          <a href="#" style={styles.sidebarLink}>
-            Home
-          </a>
-          <div style={styles.divider} />
-          {links}
-        </div>
-      </MaterialTitlePanel>
-    );
   }
 }
 
@@ -60,6 +100,11 @@ const mapStateToProps = state => ({
   ...state
 });
 
+const mapDispatchToProps = dispatch => ({
+  storePlaylistSelection: (id) => dispatch(storePlaylistSelection(id))
+});
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(SideBarContent);

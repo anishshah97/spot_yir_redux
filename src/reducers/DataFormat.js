@@ -7,7 +7,7 @@ export default (state = {
     up_bound: 0,
 
     //Playlist Sidebar Data
-    sidebar_playlist: []
+    playlist_selection: ""
     
   }, action) => {
     switch (action.type) {
@@ -22,9 +22,9 @@ export default (state = {
         });
 
       //Store sidebarplaylist
-      case "STORE_SIDEBAR_PLAYLIST":
+      case "STORE_PLAYLIST_SELECTION":
         return Object.assign({}, state, {
-          sidebar_playlist: action.sidebar_playlist
+          playlist_selection: action.id
         });
 
       default:

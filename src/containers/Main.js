@@ -46,7 +46,6 @@ export class Main extends Component {
             await this.props.fetchSavedSongs(SpotifyAPI)
             await this.props.fetchPlaylists(SpotifyAPI)
             await this.props.storeCalData(this.props.Spotify.saved_songs)
-            await this.props.storeSidebarPlaylist(this.props.Spotify.followed_playlists)
             await this.props.fetchSavedSongInfo(SpotifyAPI, this.props.Spotify.saved_songs) //Should i pass it in or refer to it in the redux action?
         }
     }
@@ -112,7 +111,7 @@ export class Main extends Component {
             <Sidebar {...sidebarProps} >
                 {/* Main Header */}
                 <MaterialTitlePanel title={contentHeader}> 
-                {/* Actual main body content use in reference to router here? */}
+                {/* Use playlist selection as a flag? */}
                 <div style={styles.content}>
                     <SavedCalendar></SavedCalendar>
                 </div>
@@ -133,7 +132,6 @@ const mapDispatchToProps = dispatch => ({
     fetchSavedSongInfo: (handler, tracks) => dispatch(fetchSavedSongInfo(handler, tracks)),
     storeCalData: (tracks) => dispatch(storeCalData(tracks)),
     fetchPlaylists: (handler) => dispatch(fetchPlaylists(handler)),
-    storeSidebarPlaylist: (playlists) => dispatch(storeSidebarPlaylist(playlists))
   });
   
 export default connect(
