@@ -32,3 +32,10 @@ export const fetchPlaylistTracks = (handler, playlists) => dispatch => {
         payload: getPlaylistTracks(handler, playlists)
     })
 }
+
+export const fetchPlaylistTrackInfo = (handler, tracks) => dispatch => {
+    return dispatch({
+        type: "FETCH_PLAYLIST_TRACK_INFO",
+        payload: collectTrackStats(handler, tracks)
+    })
+}

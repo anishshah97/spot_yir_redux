@@ -40,7 +40,8 @@ export class Main extends Component {
     
         this.state = {
           docked: mql.matches,
-          open: false
+          open: false,
+          spotAPI: new SpotifyWebApi()
         };
     
         this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
@@ -49,15 +50,13 @@ export class Main extends Component {
     }
 
     async componentDidMount() {
-        let SpotifyAPI = new SpotifyWebApi()
         if(!(this.props.Spotify.spot_token === "")){
-            //Are the awaits necessary?
-            SpotifyAPI.setAccessToken(this.props.Spotify.spot_token)
-            await this.props.fetchSavedSongs(SpotifyAPI)
-            await this.props.fetchPlaylists(SpotifyAPI)
-            await setTimeout(this.props.fetchPlaylistTracks(SpotifyAPI, this.props.Spotify.followed_playlists), 2000)
-            await setTimeout(this.props.storeCalData(this.props.Spotify.saved_songs), 2000)
-            await setTimeout(this.props.fetchSavedSongInfo(SpotifyAPI, this.props.Spotify.saved_songs), 2000) //Should i pass it in or refer to it in the redux action?
+            //Are the awaits necessary? Need to deal with too many api requests
+            await this.state.spotAPI.setAccessToken(this.props.Spotify.spot_token)
+            //await this.props.fetchSavedSongs(SpotifyAPI)
+            await this.props.fetchPlaylists(this.state.spotAPI)
+            //await this.props.storeCalData(this.props.Spotify.saved_songs)
+            //await setTimeout(this.props.fetchSavedSongInfo(SpotifyAPI, this.props.Spotify.saved_songs), 3000) //Should i pass it in or refer to it in the redux action?
         }
     }
     
@@ -89,51 +88,46 @@ export class Main extends Component {
     }
     
     render() {
-        if(this.props.Data.cal_data.length <= 0){
-            return(<FullPageLoading></FullPageLoading>)
-        }
-        else {
-            const sidebar = <SidebarContent />;
-        
-            const contentHeader = (
-            <span>
-                {!this.state.docked && (
-                <ThemeProvider theme={theme}>
-                    <Button
-                        onClick={this.toggleOpen}
-                        style={styles.contentHeaderMenuLink}
-                        variant="contained" 
-                        color="primary"
-                    >
-                        =
-                    </Button>
-                </ThemeProvider>
-                )}
-                <span>Spotify Secret Social</span>
-            </span>
-            );
-        
-            const sidebarProps = {
-                sidebar,
-                docked: this.state.docked,
-                open: this.state.open,
-                onSetOpen: this.onSetOpen
-            };
-        
-            return (
-            // Sidebar with own styles in content, uses same material title
-            <Sidebar {...sidebarProps} >
-                {/* Main Header */}
-                <MaterialTitlePanel title={contentHeader}> 
-                {/* Use playlist selection as a flag? */}
-                <div style={styles.content}>
-                    {this.props.Data.playlist_selection === "" && (<SavedSongsPage></SavedSongsPage>)}
-                    {this.props.Data.playlist_selection !== "" && (<PlaylistPage></PlaylistPage>)}
-                </div>
-                </MaterialTitlePanel>
-            </Sidebar>
-            );
-        }
+        const sidebar = <SidebarContent />;
+    
+        const contentHeader = (
+        <span>
+            {!this.state.docked && (
+            <ThemeProvider theme={theme}>
+                <Button
+                    onClick={this.toggleOpen}
+                    style={styles.contentHeaderMenuLink}
+                    variant="contained" 
+                    color="primary"
+                >
+                    =
+                </Button>
+            </ThemeProvider>
+            )}
+            <span>Spotify Secret Social</span>
+        </span>
+        );
+    
+        const sidebarProps = {
+            sidebar,
+            docked: this.state.docked,
+            open: this.state.open,
+            onSetOpen: this.onSetOpen
+        };
+    
+        return (
+        // Sidebar with own styles in content, uses same material title
+        <Sidebar {...sidebarProps} >
+            {/* Main Header */}
+            <MaterialTitlePanel title={contentHeader}> 
+            {/* Use playlist selection as a flag? */}
+            <div style={styles.content}>
+                {this.props.Data.playlist_selection === "" && (<SavedSongsPage></SavedSongsPage>)}
+                {this.props.Data.playlist_selection !== "" && (<PlaylistPage spotAPI={this.state.spotAPI}></PlaylistPage>)}
+            </div>
+            </MaterialTitlePanel>
+        </Sidebar>
+        );
       }
     }
 

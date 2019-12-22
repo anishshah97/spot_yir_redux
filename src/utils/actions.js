@@ -135,7 +135,7 @@ export async function getPlaylistTracks(handler, playlists) {
     }
 
     let playlist_tracks = playlists.map(collectPlaylistTracks, {handler : handler})
-    console.log(playlist_tracks)
+    //console.log(playlist_tracks)
 
     //Add in a step to add ID for easy looking?
 
