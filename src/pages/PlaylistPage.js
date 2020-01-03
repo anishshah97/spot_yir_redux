@@ -44,7 +44,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     fetchPlaylistTracks: (handler, playlists) => dispatch(fetchPlaylistTracks(handler, playlists)),
     fetchPlaylistTrackInfo: (handler, tracks) => dispatch(fetchPlaylistTrackInfo(handler, tracks))
-
   });
   
 export default connect(

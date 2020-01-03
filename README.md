@@ -4,7 +4,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-[Current website on Heroku](https://spot-yir.herokuapp.com)
+[Current website on Heroku](https://spot-yir.herokuapp.com) To be later named trist (triple s tracked) (spotify secret social tracked)
 
 # `Inspiration`
 

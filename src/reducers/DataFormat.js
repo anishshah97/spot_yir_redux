@@ -7,7 +7,11 @@ export default (state = {
     up_bound: 0,
 
     //Playlist Sidebar Data
-    playlist_selection: ""
+    playlist_selection: "",
+
+    //Song list
+    sort_selection: "added_at",
+    sort_direction: "asc"
     
   }, action) => {
     switch (action.type) {
@@ -26,6 +30,16 @@ export default (state = {
         return Object.assign({}, state, {
           playlist_selection: action.id
         });
+
+      case "STORE_SORT_SELECTION":
+        return Object.assign({}, state, {
+          sort_selection: action.selection
+      });
+
+      case "STORE_SORT_DIRECTION":
+        return Object.assign({}, state, {
+          sort_direction: action.direction
+      });
 
       default:
         return state;

@@ -49,9 +49,10 @@ export function prepareSidebarData(playlists){
 
 //Remove awaits? Make better asynchronous somehow
 export async function getSavedTrackList(spotifyAPIHandler) {
-    var options = {limit: 50, offset: 0}
+    var options = {limit: 50}
     return(await spotifyAPIHandler.getMySavedTracks(options = options)
     .then(async (resp) => {
+        options.offset = 0
         const results = []
         results.push(resp.items)
         while (resp.next) {
