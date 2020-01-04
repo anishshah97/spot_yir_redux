@@ -1,4 +1,4 @@
-import {getSavedTrackList, collectTrackStats, getPlaylists, getPlaylistTracks} from "../utils/actions"
+import {getSavedTrackList, collectTrackStats, getPlaylists, getPlaylistTracks, getMe} from "../utils/actions"
 
 export const storeSpotToken = spot_token => ({
     type: "STORE_SPOT_TOKEN", 
@@ -37,5 +37,12 @@ export const fetchPlaylistTrackInfo = (handler, tracks) => dispatch => {
     return dispatch({
         type: "FETCH_PLAYLIST_TRACK_INFO",
         payload: collectTrackStats(handler, tracks)
+    })
+}
+
+export const fetchMe = (handler) => dispatch => {
+    return dispatch({
+        type: "FETCH_ME",
+        payload: getMe(handler)
     })
 }

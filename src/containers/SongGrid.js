@@ -7,6 +7,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import { StyleSheet, css } from 'aphrodite';
 import PlaylistOverviewGraph from "../components/PlaylistOverviewGraph"
 import PlaylistSorter from "../components/PlaylistSorter"
+import PlaylistCreator from "../components/PlaylistCreator"
 import _ from 'lodash';
 
 const styles = StyleSheet.create({
@@ -40,7 +41,7 @@ export class SongGrid extends Component {
         }
     }
 
-    render() {
+    renderData(){
         var sort_sel = this.props.Data.sort_selection
         var sort_dir = this.props.Data.sort_direction
         var tracks = _.uniqBy(this.props.Spotify.playlist_tracks[0], "track.id")
@@ -50,8 +51,14 @@ export class SongGrid extends Component {
         tracks.sort(function (a, b) {
             return order[a.track.id] - order[b.track.id];
         });
-        
 
+        var sortedTrackURIChunks = _.chunk(tracks.map(track => track.track.uri), 100)
+        return({sort_sel: sort_sel, sort_dir: sort_dir, tracks: tracks, sortedTrackInfo: sortedTrackInfo, sortedTrackURIChunks: sortedTrackURIChunks})
+    }
+
+    render() {
+        const{ sort_sel, sort_dir, tracks, sortedTrackInfo, sortedTrackURIChunks } = this.renderData()
+        
         return (
             <div>
                 <PlaylistSorter></PlaylistSorter>
@@ -73,6 +80,13 @@ export class SongGrid extends Component {
                         )}
                     </GridList>
                 </div>
+                
+                <PlaylistCreator 
+                    name = {sort_sel+"_"+sort_dir+"_"+this.props.playlist.name}
+                    spotAPI={this.props.spotAPI}
+                    track_chunks = {sortedTrackURIChunks}
+                > 
+                </PlaylistCreator>
             </div>
         )
     }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { fetchPlaylists } from "../actions/Spotify";
+import { fetchPlaylists, fetchMe } from "../actions/Spotify";
 import SpotifyWebApi from 'spotify-web-api-js'
 import Sidebar from "react-sidebar";
 import MaterialTitlePanel from "../components/MaterialPanel";
@@ -48,10 +48,11 @@ export class Main extends Component {
     }
 
     async componentDidMount() {
-        if(!(this.props.Spotify.spot_token === "")){
+        if(this.props.Spotify.spot_token !== ""){
             //Are the awaits necessary? Need to deal with too many api requests
             await this.state.spotAPI.setAccessToken(this.props.Spotify.spot_token)
             await this.props.fetchPlaylists(this.state.spotAPI)
+            await this.props.fetchMe(this.state.spotAPI)
         }
     }
     
@@ -133,6 +134,7 @@ const mapStateToProps = state => ({
   
 const mapDispatchToProps = dispatch => ({
     fetchPlaylists: (handler) => dispatch(fetchPlaylists(handler)),
+    fetchMe: (handler) => dispatch(fetchMe(handler))
   });
   
 export default connect(
