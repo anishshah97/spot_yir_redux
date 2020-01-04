@@ -60,7 +60,6 @@ export class PlaylistOverviewGraph extends Component {
         //Inefficient way of cleaning but get er done
         var yprops = this.state.yprops
 
-
         var values = this.props.sortedTrackInfo.map(track => {
             var metric = this.props.Data.sort_selection
             return(
