@@ -16,7 +16,7 @@ export class SavedCalendar extends Component {
     
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.Data.cal_data.length === 0 && !this.props.Spotify.saved_songs_loading){
+        if (this.props.Data.cal_data.length === 0 && !this.props.Spotify.saved_songs_loading && prevProps.Spotify.saved_songs_loading){
             this.props.storeCalData(this.props.Spotify.saved_songs)
         }
     }
