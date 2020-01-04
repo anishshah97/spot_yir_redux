@@ -12,6 +12,9 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import PlaylistOverviewGraph from "../components/PlaylistOverviewGraph"
+import _ from 'lodash';
+
 
 
 
@@ -46,90 +49,86 @@ export class SongGrid extends Component {
         switch(dir){
             case "asc":
                 return([].concat(track_info)
-                    .sort((a,b) => a[sort_sel] - b[sort_sel])
-                    .map(track => track.id))
+                    .sort((a,b) => a[sort_sel] - b[sort_sel]))
             case "desc":
                 return([].concat(track_info)
-                    .sort((a,b) => a[sort_sel] - b[sort_sel]).reverse()
-                    .map(track => track.id))
+                    .sort((a,b) => a[sort_sel] - b[sort_sel]).reverse())
                     
             default:
-                return([].concat(track_info)
-                    .map(track => track.id))
+                return([].concat(track_info))
         }
     }
 
     render() {
-        if(this.props.Spotify.playlist_tracks.length === 0 || this.props.Spotify.playlist_tracks_loading || this.props.Spotify.playlist_track_info_loading){
-            return(<FullPageLoading></FullPageLoading>)
-        }
+        var sort_sel = this.props.Data.sort_selection
+        var sort_dir = this.props.Data.sort_direction
+        var tracks = _.uniqBy(this.props.Spotify.playlist_tracks[0], "track.id")
+        var sortedTrackInfo = this.sortIDs(this.props.Spotify.playlist_track_info, sort_sel, sort_dir)
+        var order = {};
+        sortedTrackInfo.forEach(function (a, i) { order[a.id] = i; });
+        tracks.sort(function (a, b) {
+            return order[a.track.id] - order[b.track.id];
+        });
+        
 
-        else{
-            var sort_sel = this.props.Data.sort_selection
-            var sort_dir = this.props.Data.sort_direction
-            var tracks = this.props.Spotify.playlist_tracks[0]
-            var sorted_IDs = this.sortIDs(this.props.Spotify.playlist_track_info, sort_sel, sort_dir)
-            var order = {};
-            sorted_IDs.forEach(function (a, i) { order[a] = i; });
-            tracks.sort(function (a, b) {
-                return order[a.track.id] - order[b.track.id];
-            });
-            
-
-            return (
+        return (
+            <div>
+                {/* Store selections from sort*/}
                 <div>
-                    {/* Store selections from sort*/}
                     <div>
-                        <div>
-                            <FormControl component="fieldset">
-                                <FormLabel component="legend">Sort Options</FormLabel>
-                                    <RadioGroup
-                                        value={sort_sel}
-                                        onChange={this.handleSortChange.bind(this)}
-                                        row
-                                    >
-                                        {sorters.map(key => 
-                                            <FormControlLabel value={key} control={<Radio />} label={key} />
-                                        )}
-                                    </RadioGroup>
-                            </FormControl>
-                        </div>
-                        
-                        <div>
-                            <FormControl component="fieldset">
-                                <FormLabel component="legend">Direction</FormLabel>
-                                    <RadioGroup
-                                        value={sort_dir}
-                                        onChange={this.handleDirChange.bind(this)}
-                                        row
-                                    >
-                                        <FormControlLabel value="asc" control={<Radio />} label="Ascending" />
-                                        <FormControlLabel value="desc" control={<Radio />} label="Descending" />
-                                    </RadioGroup>
-                            </FormControl>
-                        </div>
-
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend">Sort Options</FormLabel>
+                                <RadioGroup
+                                    value={sort_sel}
+                                    onChange={this.handleSortChange.bind(this)}
+                                    row
+                                >
+                                    {sorters.map(key => 
+                                        <FormControlLabel value={key} control={<Radio />} label={key} />
+                                    )}
+                                </RadioGroup>
+                        </FormControl>
+                    </div>
+                    
+                    <div>
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend">Direction</FormLabel>
+                                <RadioGroup
+                                    value={sort_dir}
+                                    onChange={this.handleDirChange.bind(this)}
+                                    row
+                                >
+                                    <FormControlLabel value="asc" control={<Radio />} label="Ascending" />
+                                    <FormControlLabel value="desc" control={<Radio />} label="Descending" />
+                                </RadioGroup>
+                        </FormControl>
                     </div>
 
-                    {/* Display tracks in cards */}
-                    <div className ={css(styles.root)}>
-                        <GridList cellHeight={180} cols={6} className={css(styles.gridList)}>
-                            <GridListTile key="Subheader" cols={6} style={{ height: 'auto' }}>
-                                <ListSubheader component="div">{this.props.playlist.name}</ListSubheader>
-                            </GridListTile>
-                            {tracks.map(track => 
-                                <GridListTile key={track.track.id} cols={1}>
-                                    <img src={track.track.album.images[0] ? track.track.album.images[0].url : ""} alt={track.track.name} />
-                                    <GridListTileBar
-                                        title={track.track.name}
-                                    />
-                                </GridListTile>
-                            )}
-                        </GridList>
-                    </div>
                 </div>
-            )
-        }
+
+                {/* Display Stats of  */}
+                <div>
+                    <PlaylistOverviewGraph sortedTrackInfo = {sortedTrackInfo}></PlaylistOverviewGraph>
+                </div>
+
+                {/* Display tracks in cards */}
+                <div className ={css(styles.root)}>
+                    <GridList cellHeight={180} cols={6} className={css(styles.gridList)}>
+                        <GridListTile key="Subheader" cols={6} style={{ height: 'auto' }}>
+                            <ListSubheader component="div">{this.props.playlist.name}</ListSubheader>
+                        </GridListTile>
+                        {tracks.map(track => 
+                            <GridListTile key={track.track.id} cols={1}>
+                                <img src={track.track.album.images[0] ? track.track.album.images[0].url : ""} alt={track.track.name} />
+                                <GridListTileBar
+                                    title={track.track.name}
+                                />
+                            </GridListTile>
+                        )}
+                    </GridList>
+                </div>
+            </div>
+        )
     }
 }
 

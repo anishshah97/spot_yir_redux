@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import SavedCalendar from "../components/SavedCalendar"
-import { fetchSavedSongs, fetchSavedSongInfo, fetchPlaylists, fetchPlaylistTracks } from "../actions/Spotify";
+import { fetchSavedSongs, fetchSavedSongInfo} from "../actions/Spotify";
 import { connect } from "react-redux";
 import {storeCalData} from "../actions/DataFormat"
 
@@ -11,17 +11,23 @@ export class SavedSongsPage extends Component {
 
     constructor(props) {
         super(props)
+    
+        this.state = {
+             
+        }
     }
+    
     
 
     async componentDidMount() {
         //401 bc this is running before token set in main
-        if(!(this.props.Spotify.spot_token === "")){
+        if(!(this.props.spotAPI.getAccessToken() === null)){
             await this.props.fetchSavedSongs(this.props.spotAPI)
             await this.props.storeCalData(this.props.Spotify.saved_songs)
-            await this.props.fetchSavedSongInfo(this.props.spotAPI, this.props.Spotify.saved_songs)//Should i pass it in or refer to it in the redux action?
+            //await this.props.fetchSavedSongInfo(this.props.spotAPI, this.props.Spotify.saved_songs)//Should i pass it in or refer to it in the redux action?
         }
     }
+    
     
 
     render() {
