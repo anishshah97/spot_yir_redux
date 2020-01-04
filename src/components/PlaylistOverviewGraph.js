@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { ResponsiveLine } from '@nivo/line'
-import { fadeInRight } from 'react-animations'
 import { StyleSheet, css } from 'aphrodite';
 
-const ani_styles = StyleSheet.create({
-    fadeInRight: {
-      animationName: fadeInRight,
-      animationDuration: '0.5s',
+const styles = StyleSheet.create({
+    size_cont: {
       height: 700
     }
 })
@@ -92,7 +89,7 @@ export class PlaylistOverviewGraph extends Component {
     render() {
         return (
             <div>
-                <div className={css(ani_styles.fadeInRight)}>
+                <div className={css(styles.size_cont)}>
                     <ResponsiveLine
                         data={this.state.data}
                         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}

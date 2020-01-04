@@ -21,7 +21,7 @@ export class SavedSongsPage extends Component {
 
     async componentDidMount() {
         //401 bc this is running before token set in main
-        if(!(this.props.spotAPI.getAccessToken() === null)){
+        if((this.props.spotAPI.getAccessToken() !== null) && (this.props.Spotify.saved_songs.length===0)){
             await this.props.fetchSavedSongs(this.props.spotAPI)
             await this.props.storeCalData(this.props.Spotify.saved_songs)
             //await this.props.fetchSavedSongInfo(this.props.spotAPI, this.props.Spotify.saved_songs)//Should i pass it in or refer to it in the redux action?
