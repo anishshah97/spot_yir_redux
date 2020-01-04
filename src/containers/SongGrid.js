@@ -15,9 +15,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import PlaylistOverviewGraph from "../components/PlaylistOverviewGraph"
 import _ from 'lodash';
 
-
-
-
 const styles = StyleSheet.create({
     root: {
       display: 'flex',

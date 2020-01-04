@@ -66,7 +66,7 @@ export class PlaylistOverviewGraph extends Component {
                         data={this.state.data}
                         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                         xScale={{ type: 'point' }}
-                        yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: false, reverse: false }}
+                        yScale={{ type: 'linear', min: 0, max: 1, stacked: false, reverse: false }}
                         axisTop={null}
                         axisRight={null}
                         axisBottom={{
@@ -87,14 +87,14 @@ export class PlaylistOverviewGraph extends Component {
                             legendOffset: -40,
                             legendPosition: 'middle'
                         }}
-                        colors={{ scheme: 'nivo' }}
+                        colors={[ '#1db954', '#179443', '#116f32', '#0b4a21', '#000000' ]}
                         pointSize={10}
                         pointColor={{ theme: 'background' }}
                         pointBorderWidth={2}
                         pointBorderColor={{ from: 'serieColor' }}
                         pointLabel="y"
                         pointLabelYOffset={-12}
-                        useMesh={true}
+                        enableSlices="x"
                         legends={[
                             {
                                 anchor: 'bottom-right',
