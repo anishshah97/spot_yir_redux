@@ -1,18 +1,35 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { ResponsiveLine } from '@nivo/line'
-import { fadeInRight } from 'react-animations'
 import { StyleSheet, css } from 'aphrodite';
 
-const ani_styles = StyleSheet.create({
-    fadeInRight: {
-      animationName: fadeInRight,
-      animationDuration: '0.5s',
+const styles = StyleSheet.create({
+    size_cont: {
       height: 700
     }
 })
 
-const legend = ["danceability", "energy", "acousticness", "liveness", "valence"]
+//const legend = ["danceability", "energy", "acousticness", "liveness", "valence"] not all metrics for now
+
+/*
+var line_data = legend.map(metric => {
+            var values = this.props.sortedTrackInfo.map(track => {
+                return(
+                    {"x": track.id,
+                     "y": track[metric]} //Change id to name
+                )
+            })
+            return(
+                {
+                    "id": metric,
+                    "data": values
+                }
+            )
+            }
+        )
+*/
+
+const consScale = ["danceability", "energy", "acousticness", "liveness", "valence"]
 
 export class PlaylistOverviewGraph extends Component {
 
@@ -20,7 +37,10 @@ export class PlaylistOverviewGraph extends Component {
         super(props)
     
         this.state = {
-            data: []
+            data: [],
+            yprops: {
+                yScale: { type: 'linear', min: "auto", max: "auto", stacked: false, reverse: false }
+            }
         }
     }
     
@@ -38,21 +58,30 @@ export class PlaylistOverviewGraph extends Component {
 
     cleanData(){
         //Inefficient way of cleaning but get er done
-        var line_data = legend.map(metric => {
-            var values = this.props.sortedTrackInfo.map(track => {
-                return(
-                    {"x": track.id,
-                     "y": track[metric]} //Change id to name
-                )
-            })
+        var yprops = this.state.yprops
+
+
+        var values = this.props.sortedTrackInfo.map(track => {
+            var metric = this.props.Data.sort_selection
             return(
-                {
-                    "id": metric,
-                    "data": values
-                }
+                {"x": track.name,
+                 "y": track[metric]} //Change id to name
             )
-            }
-        )
+        })
+        var line_data = [{
+            "id": this.props.Data.sort_selection,
+            "data": values
+        }]
+
+        if (consScale.includes(this.props.Data.sort_selection)){
+            yprops.yScale.min = 0
+            yprops.yScale.max = 1
+        }
+        else{
+            yprops.yScale.min = "auto"
+            yprops.yScale.max = "auto"
+        }
+    
         this.setState({data: line_data})
     }
     
@@ -61,21 +90,21 @@ export class PlaylistOverviewGraph extends Component {
     render() {
         return (
             <div>
-                <div className={css(ani_styles.fadeInRight)}>
+                <div className={css(styles.size_cont)}>
                     <ResponsiveLine
                         data={this.state.data}
                         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                         xScale={{ type: 'point' }}
-                        yScale={{ type: 'linear', min: 0, max: 1, stacked: false, reverse: false }}
+                        {...this.state.yprops}
                         axisTop={null}
                         axisRight={null}
                         axisBottom={{
                             orient: 'bottom',
                             tickSize: 5,
                             tickPadding: 5,
-                            tickRotation: 0,
+                            tickRotation: 300,
                             legend: 'Songs',
-                            legendOffset: 36,
+                            legendOffset: 40,
                             legendPosition: 'middle'
                         }}
                         axisLeft={{

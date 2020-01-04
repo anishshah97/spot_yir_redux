@@ -38,6 +38,12 @@ export function prepareCalendarData(tracks) {
     // var q3 = s.percentile(75)
     // var out_upperBound = q3 + (1.5*(q3-q1))
     var out_upperBound = s.iqr().range()[1]
+
+    if(max_date === null){
+        min_date = new Date()
+        max_date = new Date()
+        out_upperBound = 0
+    }
     
 
     return({cal_data: counts, max_date: max_date, min_date: min_date, up_bound: out_upperBound})
@@ -71,6 +77,7 @@ export async function collectTrackStats(handler, tracks) {
         let track_dict = {}
         track_dict.id = track.track.id
         track_dict.added_at = track.added_at
+        track_dict.name = track.track.name
         return (track_dict)
     })
 
