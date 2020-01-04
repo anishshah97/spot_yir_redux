@@ -5,13 +5,8 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { StyleSheet, css } from 'aphrodite';
-import { storeSortSelection, storeSortDirection } from "../actions/DataFormat"
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import PlaylistOverviewGraph from "../components/PlaylistOverviewGraph"
+import PlaylistSorter from "../components/PlaylistSorter"
 import _ from 'lodash';
 
 const styles = StyleSheet.create({
@@ -27,18 +22,8 @@ const styles = StyleSheet.create({
     }
   })
 
-const sorters = ["added_at", "danceability", "energy", "acousticness", "liveness", "valence", "tempo", "duration_ms"]
-
 //Send request for track details here? or in main container. probs main container for now lmao
 export class SongGrid extends Component {
-
-    handleSortChange(event){
-        this.props.storeSortSelection(event.target.value)
-    }
-
-    handleDirChange(event){
-        this.props.storeSortDirection(event.target.value)
-    }
 
     //Move to redux data for processing into other graphs no need to do same code
     sortIDs(track_info, sort_sel, dir){
@@ -69,43 +54,8 @@ export class SongGrid extends Component {
 
         return (
             <div>
-                {/* Store selections from sort*/}
-                <div>
-                    <div>
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend">Sort Options</FormLabel>
-                                <RadioGroup
-                                    value={sort_sel}
-                                    onChange={this.handleSortChange.bind(this)}
-                                    row
-                                >
-                                    {sorters.map(key => 
-                                        <FormControlLabel value={key} control={<Radio />} label={key} />
-                                    )}
-                                </RadioGroup>
-                        </FormControl>
-                    </div>
-                    
-                    <div>
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend">Direction</FormLabel>
-                                <RadioGroup
-                                    value={sort_dir}
-                                    onChange={this.handleDirChange.bind(this)}
-                                    row
-                                >
-                                    <FormControlLabel value="asc" control={<Radio />} label="Ascending" />
-                                    <FormControlLabel value="desc" control={<Radio />} label="Descending" />
-                                </RadioGroup>
-                        </FormControl>
-                    </div>
-
-                </div>
-
-                {/* Display Stats of  add so it switches graph based on selected type? Date currently not working*/}
-                <div>
-                    <PlaylistOverviewGraph sortedTrackInfo = {sortedTrackInfo}></PlaylistOverviewGraph>
-                </div>
+                <PlaylistSorter></PlaylistSorter>
+                <PlaylistOverviewGraph sortedTrackInfo = {sortedTrackInfo}></PlaylistOverviewGraph>
 
                 {/* Display tracks in cards */}
                 <div className ={css(styles.root)}>
@@ -132,12 +82,6 @@ const mapStateToProps = state => ({
     ...state
   });
   
-const mapDispatchToProps = dispatch => ({
-    storeSortSelection: (selection) => dispatch(storeSortSelection(selection)),
-    storeSortDirection: (direction) => dispatch(storeSortDirection(direction))
-  });
-  
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
 )(SongGrid);
