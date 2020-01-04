@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { ResponsiveLine } from '@nivo/line'
 import { fadeInRight } from 'react-animations'
 import { StyleSheet, css } from 'aphrodite';
-import FullPageLoading from "./FullPageLoading"
 
 const ani_styles = StyleSheet.create({
     fadeInRight: {
@@ -38,6 +37,7 @@ export class PlaylistOverviewGraph extends Component {
     }
 
     cleanData(){
+        //Inefficient way of cleaning but get er done
         var line_data = legend.map(metric => {
             var values = this.props.sortedTrackInfo.map(track => {
                 return(

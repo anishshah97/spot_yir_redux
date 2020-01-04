@@ -60,7 +60,7 @@ export class SongGrid extends Component {
         var sort_sel = this.props.Data.sort_selection
         var sort_dir = this.props.Data.sort_direction
         var tracks = _.uniqBy(this.props.Spotify.playlist_tracks[0], "track.id")
-        var sortedTrackInfo = this.sortIDs(this.props.Spotify.playlist_track_info, sort_sel, sort_dir)
+        var sortedTrackInfo = _.uniqBy(this.sortIDs(this.props.Spotify.playlist_track_info, sort_sel, sort_dir), "id")
         var order = {};
         sortedTrackInfo.forEach(function (a, i) { order[a.id] = i; });
         tracks.sort(function (a, b) {
