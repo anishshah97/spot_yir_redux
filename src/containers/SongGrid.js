@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {connect} from "react-redux"
-import FullPageLoading from "../components/FullPageLoading"
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -103,7 +102,7 @@ export class SongGrid extends Component {
 
                 </div>
 
-                {/* Display Stats of  */}
+                {/* Display Stats of  add so it switches graph based on selected type? Date currently not working*/}
                 <div>
                     <PlaylistOverviewGraph sortedTrackInfo = {sortedTrackInfo}></PlaylistOverviewGraph>
                 </div>
