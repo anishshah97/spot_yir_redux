@@ -60,10 +60,11 @@ export class PlaylistOverviewGraph extends Component {
         //Inefficient way of cleaning but get er done
         var yprops = this.state.yprops
 
+
         var values = this.props.sortedTrackInfo.map(track => {
             var metric = this.props.Data.sort_selection
             return(
-                {"x": track.id,
+                {"x": track.name,
                  "y": track[metric]} //Change id to name
             )
         })
@@ -101,9 +102,9 @@ export class PlaylistOverviewGraph extends Component {
                             orient: 'bottom',
                             tickSize: 5,
                             tickPadding: 5,
-                            tickRotation: 0,
+                            tickRotation: 300,
                             legend: 'Songs',
-                            legendOffset: 36,
+                            legendOffset: 40,
                             legendPosition: 'middle'
                         }}
                         axisLeft={{

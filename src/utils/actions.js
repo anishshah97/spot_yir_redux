@@ -71,6 +71,7 @@ export async function collectTrackStats(handler, tracks) {
         let track_dict = {}
         track_dict.id = track.track.id
         track_dict.added_at = track.added_at
+        track_dict.name = track.track.name
         return (track_dict)
     })
 
