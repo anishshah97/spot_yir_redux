@@ -12,7 +12,22 @@ export default (state = {
     //Audio features of saved songs
     saved_song_details : [],
     saved_song_details_loading: false,
-    saved_song_details_error: false
+    saved_song_details_error: false,
+
+    //My Playlists
+    followed_playlists : [],
+    followed_playlists_loading: false,
+    followed_playlists_error: false,
+
+    //My Playlist Tracks
+    playlist_tracks : [],
+    playlist_tracks_loading: false,
+    playlist_tracks_error: false,
+
+    //My Playlist Tracks info
+    playlist_track_info : [],
+    playlist_track_info_loading: false,
+    playlist_track_info_error: false
     
   }, action) => {
     switch (action.type) {
@@ -54,6 +69,54 @@ export default (state = {
         return Object.assign({}, state, {
           saved_song_details_loading: false,
           saved_song_details_error: true
+        })
+
+      //Deal with from promises from playlists
+      case "FETCH_PLAYLISTS_PENDING":
+        return Object.assign({}, state, {
+          followed_playlists_loading: true
+        });
+      case "FETCH_PLAYLISTS_FULFILLED":
+        return Object.assign({}, state, {
+          followed_playlists: action.payload,
+          followed_playlists_loading : false
+        })
+      case "FETCH_PLAYLISTS_REJECTED":
+        return Object.assign({}, state, {
+          followed_playlists_loading: false,
+          followed_playlists_error: true
+        })
+
+      //Deal with from promises from playlist tracks
+      case "FETCH_PLAYLIST_TRACKS_PENDING":
+        return Object.assign({}, state, {
+          playlist_tracks_loading: true
+        });
+      case "FETCH_PLAYLIST_TRACKS_FULFILLED":
+        return Object.assign({}, state, {
+          playlist_tracks: action.payload,
+          playlist_tracks_loading : false
+        })
+      case "FETCH_PLAYLIST_TRACKS_REJECTED":
+        return Object.assign({}, state, {
+          playlist_tracks_loading: false,
+          playlist_tracks_error: true
+        })
+
+        //Deal with from promises from playlist track info
+      case "FETCH_PLAYLIST_TRACK_INFO_PENDING":
+        return Object.assign({}, state, {
+          playlist_track_info_loading: true
+        });
+      case "FETCH_PLAYLIST_TRACK_INFO_FULFILLED":
+        return Object.assign({}, state, {
+          playlist_track_info: action.payload,
+          playlist_track_info_loading : false
+        })
+      case "FETCH_PLAYLIST_TRACK_INFO_REJECTED":
+        return Object.assign({}, state, {
+          playlist_track_info_loading: false,
+          playlist_track_info_error: true
         })
 
       
