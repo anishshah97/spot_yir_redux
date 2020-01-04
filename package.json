@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.8.0",
+    "@material-ui/icons": "^4.5.1",
     "@nivo/calendar": "^0.61.1",
     "@nivo/line": "^0.61.1",
     "@testing-library/jest-dom": "^4.2.4",

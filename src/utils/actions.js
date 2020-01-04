@@ -49,10 +49,6 @@ export function prepareCalendarData(tracks) {
     return({cal_data: counts, max_date: max_date, min_date: min_date, up_bound: out_upperBound})
 }
 
-export function prepareSidebarData(playlists){
-    return ({sidebar_playlist: ["TEST"]})
-}
-
 //Remove awaits? Make better asynchronous somehow
 export async function getSavedTrackList(spotifyAPIHandler) {
     var options = {limit: 50}
@@ -150,3 +146,6 @@ export async function getPlaylistTracks(handler, playlists) {
     return(Promise.all(playlist_tracks))
 }
 
+export function getMe(handler){
+    return(handler.getMe())
+}

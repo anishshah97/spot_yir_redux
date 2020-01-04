@@ -7,11 +7,6 @@ import _ from "lodash"
 
 export class PlaylistPage extends Component {
 
-    constructor(props) {
-        super(props)
-    }
-    
-
     componentDidMount() {
         this.getData()
     }
@@ -22,7 +17,6 @@ export class PlaylistPage extends Component {
         }
     }
     
-
     async getData() {
         await this.props.fetchPlaylistTracks(this.props.spotAPI, [_.find(this.props.Spotify.followed_playlists, {id: this.props.Data.playlist_selection})])
         await this.props.fetchPlaylistTrackInfo(this.props.spotAPI, this.props.Spotify.playlist_tracks[0])
@@ -31,7 +25,10 @@ export class PlaylistPage extends Component {
     render() {
         return (
             <div>
-                <SongGrid playlist={_.find(this.props.Spotify.followed_playlists, {id: this.props.Data.playlist_selection})}></SongGrid>
+                <SongGrid 
+                    playlist={_.find(this.props.Spotify.followed_playlists, {id: this.props.Data.playlist_selection})}
+                    spotAPI={this.props.spotAPI}
+                ></SongGrid>
             </div>
         )
     }
