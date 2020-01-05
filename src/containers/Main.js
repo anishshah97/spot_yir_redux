@@ -115,13 +115,15 @@ export class Main extends Component {
         // Sidebar with own styles in content, uses same material title
         <Sidebar {...sidebarProps} >
             {/* Main Header */}
-            <MaterialTitlePanel title={contentHeader}> 
-            {/* Use playlist selection as a flag? */}
-            <div style={styles.content}>
-                {this.props.Data.playlist_selection === "" && this.state.spotAPI.getAccessToken() !== null && (<SavedSongsPage spotAPI={this.state.spotAPI}></SavedSongsPage>)}
-                {this.props.Data.playlist_selection !== "" && this.state.spotAPI.getAccessToken() !== null && (<PlaylistPage spotAPI={this.state.spotAPI}></PlaylistPage>)}
-            </div>
-            </MaterialTitlePanel>
+            <ThemeProvider theme={theme}>
+                <MaterialTitlePanel title={contentHeader}> 
+                {/* Use playlist selection as a flag? */}
+                <div style={styles.content}>
+                    {this.props.Playlists.playlist_selection === "" && this.state.spotAPI.getAccessToken() !== null && (<SavedSongsPage spotAPI={this.state.spotAPI}></SavedSongsPage>)}
+                    {this.props.Playlists.playlist_selection !== "" && this.state.spotAPI.getAccessToken() !== null && (<PlaylistPage spotAPI={this.state.spotAPI}></PlaylistPage>)}
+                </div>
+                </MaterialTitlePanel>
+            </ThemeProvider>
         </Sidebar>
         );
       }

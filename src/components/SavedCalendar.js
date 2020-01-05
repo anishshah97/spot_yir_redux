@@ -15,6 +15,12 @@ const styles = StyleSheet.create({
 export class SavedCalendar extends Component {
     
 
+    componentDidMount() {
+        if (this.props.Data.cal_data.length === 0 && this.props.Spotify.saved_songs_success){
+            this.props.storeCalData(this.props.Spotify.saved_songs)
+        }
+    }
+    
     componentDidUpdate(prevProps, prevState) {
         if (this.props.Data.cal_data.length === 0 && this.props.Spotify.saved_songs_success){
             this.props.storeCalData(this.props.Spotify.saved_songs)

@@ -1,36 +1,76 @@
 import React, { Component } from 'react'
 import SongGrid from "../containers/SongGrid"
 import {connect} from "react-redux"
-import { fetchPlaylistTracks, fetchPlaylistTrackInfo } from "../actions/Spotify";
+import { fetchPlaylistTracks, fetchPlaylistTrackInfo, markFoundPlaylist } from "../actions/Spotify";
 import _ from "lodash"
+import FullPageLoading from "../components/FullPageLoading"
 
 
 export class PlaylistPage extends Component {
 
-    componentDidMount() {
-        this.getData()
+    async componentDidMount() {
+        await this.checkCachedPlaylists()
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if(prevProps.Data.playlist_selection !== this.props.Data.playlist_selection){
-            this.getData()
+    async componentDidUpdate(prevProps, prevState) {
+        var tracks_success = prevProps.Playlists.playlist_tracks_success !== this.props.Playlists.playlist_tracks_success
+        var track_info_success = prevProps.Playlists.playlist_track_info_success !== this.props.Playlists.playlist_track_info_success
+
+        if( (tracks_success && track_info_success) ){
+            await this.checkCachedPlaylists()
+        }
+
+    }
+
+    async checkCachedPlaylists(){
+        var tracks = _.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection})
+        var track_info = _.find(this.props.Playlists.playlist_track_info, {pid: this.props.Playlists.playlist_selection})
+
+        if(!tracks || !track_info){
+            if(!this.props.Playlists.playlist_tracks_loading && !this.props.Playlists.playlist_tracks_success
+                && !this.props.Playlists.playlist_track_info_loading && !this.props.Playlists.playlist_track_info_success ){
+                await this.getFullData()
+            }
+        }
+        else{
+            //Side effect of one extra call after it calls itself because it induces an update that will run back into itself
+            await this.props.markFoundPlaylist()
         }
     }
     
-    async getData() {
-        await this.props.fetchPlaylistTracks(this.props.spotAPI, [_.find(this.props.Spotify.followed_playlists, {id: this.props.Data.playlist_selection})])
-        await this.props.fetchPlaylistTrackInfo(this.props.spotAPI, this.props.Spotify.playlist_tracks[0])
+    async getFullData() {
+        var chosen_playlist = _.find(this.props.Playlists.followed_playlists, {id: this.props.Playlists.playlist_selection})
+        await this.props.fetchPlaylistTracks(
+            this.props.spotAPI, 
+            chosen_playlist,
+            this.props.Playlists.playlist_selection)
+        
+        var playlist_tracks = _.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection})
+        if(playlist_tracks){
+            await this.props.fetchPlaylistTrackInfo(
+                this.props.spotAPI, 
+                playlist_tracks.data,
+                this.props.Playlists.playlist_selection)
+        }
     }
 
     render() {
-        return (
-            <div>
-                <SongGrid 
-                    playlist={_.find(this.props.Spotify.followed_playlists, {id: this.props.Data.playlist_selection})}
-                    spotAPI={this.props.spotAPI}
-                ></SongGrid>
-            </div>
-        )
+        //Move loaders at the container level?
+        if(!this.props.Playlists.playlist_tracks_success || !this.props.Playlists.playlist_track_info_success){
+            return (<FullPageLoading></FullPageLoading>)
+        }
+        else{
+            return (
+                <div>
+                    <SongGrid 
+                            playlist={_.find(this.props.Playlists.followed_playlists, {id: this.props.Playlists.playlist_selection})}
+                            spotAPI={this.props.spotAPI}
+                            rawTracks={_.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection})}
+                            rawTrackInfo={_.find(this.props.Playlists.playlist_track_info, {pid: this.props.Playlists.playlist_selection})}
+                    ></SongGrid>
+                </div>
+            )
+        }
     }
 }
 
@@ -39,8 +79,9 @@ const mapStateToProps = state => ({
   });
 
 const mapDispatchToProps = dispatch => ({
-    fetchPlaylistTracks: (handler, playlists) => dispatch(fetchPlaylistTracks(handler, playlists)),
-    fetchPlaylistTrackInfo: (handler, tracks) => dispatch(fetchPlaylistTrackInfo(handler, tracks))
+    fetchPlaylistTracks: (handler, playlists, pid) => dispatch(fetchPlaylistTracks(handler, playlists, pid)),
+    fetchPlaylistTrackInfo: (handler, tracks, pid) => dispatch(fetchPlaylistTrackInfo(handler, tracks, pid)),
+    markFoundPlaylist: () => dispatch(markFoundPlaylist())
   });
   
 export default connect(

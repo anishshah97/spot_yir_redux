@@ -46,7 +46,7 @@ export class SideBarContent extends Component {
   }
   
   render() {
-    if(this.props.Spotify.followed_playlists.length === 0){
+    if(this.props.Playlists.followed_playlists.length === 0){
       return (<FullPageLoading></FullPageLoading>)
     }
     else{
@@ -54,7 +54,7 @@ export class SideBarContent extends Component {
       ? { ...styles.sidebar, ...this.props.style }
       : styles.sidebar;
 
-      let links = this.props.Spotify.followed_playlists.map(
+      let links = this.props.Playlists.followed_playlists.map(
         function(item){
           return (
             {

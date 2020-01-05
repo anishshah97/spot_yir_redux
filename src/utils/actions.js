@@ -68,7 +68,8 @@ export async function getSavedTrackList(spotifyAPIHandler) {
 }
 
 //General enough for use of any raw input of list of selected saved songs
-export async function collectTrackStats(handler, tracks) {
+export async function collectTrackStats(handler, tracks, pid = null) {
+    tracks = _.filter(tracks, null)
     let track_data = tracks.map(function(track) {
         let track_dict = {}
         track_dict.id = track.track.id
@@ -89,17 +90,28 @@ export async function collectTrackStats(handler, tracks) {
         var track_stats = [].concat.apply([], stats)
         let data = [];
 
+        track_stats = _.filter(track_stats, null)
+
         for(let i=0; i<track_data.length; i++) {
-        data.push({
-            ...track_data[i], 
-            ...(track_stats.find((itmInner) => itmInner.id === track_data[i].id))}
-        );
+            data.push({
+                ...track_data[i], 
+                ...(track_stats.find((itmInner) => itmInner.id === track_data[i].id))}
+            );
         }
         return data
     }
 
-    return(Promise.all(_.chunk(track_data, 100).map(audioAPI, {handler : handler}))
-    .then(fillTrackData.bind(null, track_data)))
+    let resp = Promise.all(_.chunk(track_data, 100).map(audioAPI, {handler : handler}))
+    .then(fillTrackData.bind(null, track_data))
+
+    if(pid){
+        resp = resp.then(data => {
+            var val = {pid: pid, data: data}
+            return(val)
+        })
+    }
+
+    return(resp)
     
 }
 
@@ -120,30 +132,30 @@ export async function getPlaylists(spotifyAPIHandler) {
     }))
 }
 
-export async function getPlaylistTracks(handler, playlists) {
+export async function getPlaylistTracks(handler, playlist, pid) {
+    //inefficient search through all track elemtns to find matching pids but meh
     
-    async function collectPlaylistTracks(playlist){
+    async function collectPlaylistTracks(playlist, handler, pid){
         var options = {limit: 100, offset: 0}
-        return await handler.getPlaylistTracks(playlist.id, options=options)
+        return await handler.getPlaylistTracks(pid, options=options)
         .then(async function (resp){
             const results = []
             results.push(resp.items)
             while (resp.next) {
                 options.offset = resp.offset+100
-                resp = await handler.getPlaylistTracks(playlist.id, options = options)
+                resp = await handler.getPlaylistTracks(pid, options = options)
                 results.push(resp.items);
             }
             var playlist_tracks = [].concat.apply([], results)
-            return playlist_tracks
+            return {pid: pid, data: playlist_tracks}
         })
     }
-
-    let playlist_tracks = playlists.map(collectPlaylistTracks, {handler : handler})
+    let playlist_tracks = collectPlaylistTracks(playlist, handler, pid)
     //console.log(playlist_tracks)
 
     //Add in a step to add ID for easy looking?
 
-    return(Promise.all(playlist_tracks))
+    return(playlist_tracks.then(data => data))
 }
 
 export function getMe(handler){

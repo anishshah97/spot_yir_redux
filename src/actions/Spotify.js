@@ -26,17 +26,17 @@ export const fetchPlaylists = (handler) => dispatch => {
     })
 }
 
-export const fetchPlaylistTracks = (handler, playlists) => dispatch => {
+export const fetchPlaylistTracks = (handler, playlists, pid) => dispatch => {
     return dispatch({
         type: "FETCH_PLAYLIST_TRACKS",
-        payload: getPlaylistTracks(handler, playlists)
+        payload: getPlaylistTracks(handler, playlists, pid)
     })
 }
 
-export const fetchPlaylistTrackInfo = (handler, tracks) => dispatch => {
+export const fetchPlaylistTrackInfo = (handler, tracks, pid) => dispatch => {
     return dispatch({
         type: "FETCH_PLAYLIST_TRACK_INFO",
-        payload: collectTrackStats(handler, tracks)
+        payload: collectTrackStats(handler, tracks, pid)
     })
 }
 
@@ -46,3 +46,7 @@ export const fetchMe = (handler) => dispatch => {
         payload: getMe(handler)
     })
 }
+
+export const markFoundPlaylist = () => ({
+    type: "MARK_FOUND_PLAYLIST"
+})
