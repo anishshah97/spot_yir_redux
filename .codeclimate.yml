@@ -1,3 +1,7 @@
 plugins: 
   eslint:
     enabled: true
+  fixme:
+    enabled: true
+  csslint: 
+    enabled: true
