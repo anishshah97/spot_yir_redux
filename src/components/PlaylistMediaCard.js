@@ -33,7 +33,7 @@ export class PlaylistMediaCard extends Component {
     }
   }
 
-  handleClick(event){
+  handleClick(){
     this.props.storePlaylistSelection(this.props.data.id)
   }
   
@@ -44,7 +44,11 @@ export class PlaylistMediaCard extends Component {
     return (
       <div>
         <Card className={classes.card}>
-          <ButtonBase className={classes.cardButton} onClick={this.handleClick.bind(this)}>
+          <ButtonBase 
+            className={classes.cardButton} 
+            onClick={this.handleClick.bind(this)}
+            disabled={this.props.Playlists.playlist_tracks_loading || this.props.Playlists.playlist_track_info_loading}
+          >
             <CardMedia
               className={classes.media}
               image={data.image[0] ? data.image[0].url : ""} //Throws error bc cant be blank, need better default

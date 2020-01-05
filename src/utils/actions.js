@@ -69,6 +69,7 @@ export async function getSavedTrackList(spotifyAPIHandler) {
 
 //General enough for use of any raw input of list of selected saved songs
 export async function collectTrackStats(handler, tracks, pid = null) {
+    tracks = _.filter(tracks, null)
     let track_data = tracks.map(function(track) {
         let track_dict = {}
         track_dict.id = track.track.id
@@ -89,11 +90,13 @@ export async function collectTrackStats(handler, tracks, pid = null) {
         var track_stats = [].concat.apply([], stats)
         let data = [];
 
+        track_stats = _.filter(track_stats, null)
+
         for(let i=0; i<track_data.length; i++) {
-        data.push({
-            ...track_data[i], 
-            ...(track_stats.find((itmInner) => itmInner.id === track_data[i].id))}
-        );
+            data.push({
+                ...track_data[i], 
+                ...(track_stats.find((itmInner) => itmInner.id === track_data[i].id))}
+            );
         }
         return data
     }

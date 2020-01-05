@@ -81,7 +81,7 @@ export class SongGrid extends Component {
     }
 
     render() {
-        const{ sort_sel, sort_dir, tracks, sortedTrackInfo, sortedTrackURIChunks } = this.renderData()        
+        const{ sort_sel, sort_dir, tracks, sortedTrackInfo, sortedTrackURIChunks } = this.renderData()     
         return (
             <div>
                 <PlaylistSorter></PlaylistSorter>
