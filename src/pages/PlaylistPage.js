@@ -7,29 +7,32 @@ import _ from "lodash"
 
 export class PlaylistPage extends Component {
 
-    componentDidMount() {
-        var tracks = _.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection})
-        var track_info = _.find(this.props.Playlists.playlist_track_info, {pid: this.props.Playlists.playlist_selection})
-
-        if(!tracks && !track_info){
-            this.getFullData()
-        }
-        else{
-            this.props.markFoundPlaylist()
-        }
+    async componentDidMount() {
+        await this.checkCachedPlaylists()
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    async componentDidUpdate(prevProps, prevState) {
+        var tracks_success = prevProps.Playlists.playlist_tracks_success !== this.props.Playlists.playlist_tracks_success
+        var track_info_success = prevProps.Playlists.playlist_track_info_success !== this.props.Playlists.playlist_track_info_success
+        
+        if( tracks_success && track_info_success ){
+            await this.checkCachedPlaylists()
+        }
+
+    }
+
+    async checkCachedPlaylists(){
         var tracks = _.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection})
         var track_info = _.find(this.props.Playlists.playlist_track_info, {pid: this.props.Playlists.playlist_selection})
-    
-        if(prevProps.Playlists.playlist_selection !== this.props.Playlists.playlist_selection){
-            if(!tracks && !track_info){
-                this.getFullData()
+
+        if(!tracks || !track_info){
+            if(!this.props.Playlists.playlist_tracks_loading && !this.props.Playlists.playlist_tracks_success
+                && !this.props.Playlists.playlist_track_info_loading && !this.props.Playlists.playlist_track_info_success ){
+                await this.getFullData()
             }
-            else{
-                this.props.markFoundPlaylist()
-            }
+        }
+        else{
+            await this.props.markFoundPlaylist()
         }
     }
     
@@ -38,6 +41,7 @@ export class PlaylistPage extends Component {
             this.props.spotAPI, 
             _.find(this.props.Playlists.followed_playlists, {id: this.props.Playlists.playlist_selection}),
             this.props.Playlists.playlist_selection)
+
         await this.props.fetchPlaylistTrackInfo(
             this.props.spotAPI, 
             _.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection}).data,

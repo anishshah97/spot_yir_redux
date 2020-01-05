@@ -3,7 +3,7 @@ import {connect} from "react-redux"
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
+//import ListSubheader from '@material-ui/core/ListSubheader';
 import { StyleSheet, css } from 'aphrodite';
 import PlaylistOverviewGraph from "../components/PlaylistOverviewGraph"
 import PlaylistSorter from "../components/PlaylistSorter"
@@ -41,6 +41,8 @@ export class SongGrid extends Component {
                 return([].concat(track_info))
         }
     }
+
+    //cdup double click breaks (playlist selection doesnt update redux store but clicking still sets successes to false)
 
     renderData(){
         var sort_sel = this.props.Data.sort_selection

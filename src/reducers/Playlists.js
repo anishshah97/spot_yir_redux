@@ -46,8 +46,10 @@ export default (state = {
     //Store sidebarplaylist
     case "STORE_PLAYLIST_SELECTION":
         return Object.assign({}, state, {
+          playlist_tracks_loading: false,
           playlist_tracks_success: false,
           playlist_tracks_error: false,
+          playlist_track_info_loading: false,
           playlist_track_info_success: false,
           playlist_track_info_error: false,
           playlist_selection: action.id
@@ -55,8 +57,10 @@ export default (state = {
 
     case "MARK_FOUND_PLAYLIST":
         return Object.assign({}, state, {
+          playlist_tracks_loading: false,
           playlist_tracks_success: true,
           playlist_tracks_error: false,
+          playlist_track_info_loading: false,
           playlist_track_info_success: true,
           playlist_track_info_error: false,
     });
