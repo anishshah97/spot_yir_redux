@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import SavedCalendar from "../components/SavedCalendar"
 import { fetchSavedSongs, fetchSavedSongInfo} from "../actions/Spotify";
 import { connect } from "react-redux";
-import FullPageLoading from '../components/FullPageLoading';
 
 export class SavedSongsPage extends Component {
 
@@ -14,10 +13,6 @@ export class SavedSongsPage extends Component {
     }
 
     render() {
-        //Move loaders to the container level
-        if (!this.props.Spotify.saved_songs_success){
-            return(<FullPageLoading></FullPageLoading>)
-        }
         return (
             <div>
                 <SavedCalendar></SavedCalendar>

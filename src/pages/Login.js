@@ -7,16 +7,19 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 
 //Green color theme to match Spotify
-// TODO: Properly define a color scheme, wrap around whole App 
+// TODO: Properly define a color scheme, wrap around whole App
+// TODO: Move styles to separate file
 const theme = createMuiTheme({
     palette: {
       primary: green,
     },
   });
 
+const spotAuthLink = `${process.env.REACT_APP_SPOT_AUTH_END}?client_id=${process.env.REACT_APP_SPOT_CLID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=${process.env.REACT_APP_SPOT_SCOPES}&response_type=token&show_dialog=true`
+
   export class Login extends Component {
     componentDidMount() {
-        //Read has to get Spotify token
+        //Read spotify token from window after redirect and store in redux
         let _token = hash.access_token;
 
         //If token exists store in redux so the spotify API can always reference
@@ -32,7 +35,7 @@ const theme = createMuiTheme({
                     <Button 
                         variant="contained" 
                         color="primary"
-                        href={`${process.env.REACT_APP_SPOT_AUTH_END}?client_id=${process.env.REACT_APP_SPOT_CLID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=${process.env.REACT_APP_SPOT_SCOPES}&response_type=token&show_dialog=true`}
+                        href={spotAuthLink}
                         onClick = {storeSpotToken}
                     >
                     Login to Spotify

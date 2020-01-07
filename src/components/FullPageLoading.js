@@ -5,6 +5,8 @@ import React, { Component } from 'react'
 import { fadeInLeft } from 'react-animations'
 import { StyleSheet, css } from 'aphrodite';
 
+
+// TODO: Move styles to separate file
 const styles = StyleSheet.create({
     fadeInLeft: {
       animationName: fadeInLeft,
@@ -17,21 +19,22 @@ const styles = StyleSheet.create({
     }
 })
 
+const mainAni = {
+    loop: true,
+    autoplay: true, 
+    animationData: animationData.default,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
+};
+const footAni = {
+    loop: true,
+    autoplay: true, 
+    animationData: footerAnimation1.default
+}
+
 export default class FullPageLoading extends Component {
     render() {
-        const mainAni = {
-            loop: true,
-            autoplay: true, 
-            animationData: animationData.default,
-            rendererSettings: {
-              preserveAspectRatio: 'xMidYMid slice'
-            }
-        };
-        const footAni = {
-            loop: true,
-            autoplay: true, 
-            animationData: footerAnimation1.default
-        }
         return (
         <div>
             <div className={css(styles.fadeInLeft)}>

@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import SavedSongsPage from "../subpages/SavedSongsPage"
 import PlaylistPage from "../subpages/PlaylistPage"
 
-//Css
+//TODO: Move styles to seperate file
 const styles = {
   contentHeaderMenuLink: {
     textDecoration: "none",
@@ -132,7 +132,7 @@ export class Main extends Component {
                 <div style={styles.content}>
                     {/* Check to see if token was properly passed, if not return error page */}
                     {_token ? 
-                    {/* If working token then check to see if user selected a playlist or not and route to proper subpage */}
+                    /* If working token then check to see if user selected a playlist or not and route to proper subpage */
                         (playlist_selection === "" ? 
                             (<SavedSongsPage spotAPI={this.state.spotAPI}></SavedSongsPage>)
                             :(<PlaylistPage spotAPI={this.state.spotAPI}></PlaylistPage>))

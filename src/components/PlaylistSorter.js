@@ -7,8 +7,6 @@ import FormLabel from "@material-ui/core/FormLabel";
 import { connect } from "react-redux";
 import { storeSortSelection, storeSortDirection } from "../actions/DataFormat"
 
-
-
 const sorters = ["added_at", "danceability", "energy", "acousticness", "liveness", "valence", "tempo", "duration_ms"]
 
 export class PlaylistSorter extends Component {
@@ -24,6 +22,7 @@ export class PlaylistSorter extends Component {
         var sort_sel = this.props.Data.sort_selection
         var sort_dir = this.props.Data.sort_direction
         return (
+            //TODO: Create general sort class that takes onChange handler prop and FormControlLabel mapper {key: value}
             <div>
                     <div>
                         <FormControl component="fieldset">
