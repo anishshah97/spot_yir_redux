@@ -7,27 +7,24 @@ import Lottie from 'react-lottie'
 import * as animationData from '../lotties/forward-media.json'
 
 const styles = StyleSheet.create({
-    player: {
-      height: '100vh',
-      width: "100vw"
-    },
     skip : {
         height: 100,
         width: 100
     }
 })
 
+const skipAni = {
+    loop: true,
+    autoplay: true, 
+    animationData: animationData.default,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
+    }
+};
+
 export class IntroVideo extends Component {
 
     render() {
-        const skipAni = {
-            loop: true,
-            autoplay: true, 
-            animationData: animationData.default,
-            rendererSettings: {
-              preserveAspectRatio: 'xMidYMid slice'
-            }
-        };
         return (
             <div className={css(styles.player)} >
                 <div 

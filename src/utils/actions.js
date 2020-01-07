@@ -52,14 +52,14 @@ export function prepareCalendarData(tracks) {
 //Remove awaits? Make better asynchronous somehow
 export async function getSavedTrackList(spotifyAPIHandler) {
     var options = {limit: 50}
-    return(await spotifyAPIHandler.getMySavedTracks(options = options)
+    return(await spotifyAPIHandler.getMySavedTracks(options)
     .then(async (resp) => {
         options.offset = 0
         const results = []
         results.push(resp.items)
         while (resp.next) {
             options.offset = resp.offset+50
-            resp = await spotifyAPIHandler.getMySavedTracks(options = options)
+            resp = await spotifyAPIHandler.getMySavedTracks(options)
             results.push(resp.items);
         }
         var saved_tracks = [].concat.apply([], results)
@@ -118,13 +118,13 @@ export async function collectTrackStats(handler, tracks, pid = null) {
 //Remove awaits? Make better asynchronous somehow
 export async function getPlaylists(spotifyAPIHandler) {
     var options = {limit: 50, offset: 0}
-    return(await spotifyAPIHandler.getUserPlaylists(options = options)
+    return(await spotifyAPIHandler.getUserPlaylists(options)
     .then(async (resp) => {
         const results = []
         results.push(resp.items)
         while (resp.next) {
             options.offset = resp.offset+50
-            resp = await spotifyAPIHandler.getUserPlaylists(options = options)
+            resp = await spotifyAPIHandler.getUserPlaylists(options)
             results.push(resp.items);
         }
         var followed_playlists = [].concat.apply([], results)
@@ -137,13 +137,13 @@ export async function getPlaylistTracks(handler, playlist, pid) {
     
     async function collectPlaylistTracks(playlist, handler, pid){
         var options = {limit: 100, offset: 0}
-        return await handler.getPlaylistTracks(pid, options=options)
+        return await handler.getPlaylistTracks(pid, options)
         .then(async function (resp){
             const results = []
             results.push(resp.items)
             while (resp.next) {
                 options.offset = resp.offset+100
-                resp = await handler.getPlaylistTracks(pid, options = options)
+                resp = await handler.getPlaylistTracks(pid, options)
                 results.push(resp.items);
             }
             var playlist_tracks = [].concat.apply([], results)

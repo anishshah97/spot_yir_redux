@@ -1,23 +1,25 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { storeSpotToken } from "../actions/Spotify";
-//import { authEndpoint, clientId, redirectUri, scopes } from "../utils/spotify_config";
 import hash from "../utils/token_hash"
 import Button from '@material-ui/core/Button';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 
-
+//Green color theme to match Spotify
+// TODO: Properly define a color scheme, wrap around whole App 
 const theme = createMuiTheme({
     palette: {
       primary: green,
     },
   });
-//Is component did mount best for redux?
-export class Login extends Component {
+
+  export class Login extends Component {
     componentDidMount() {
+        //Read has to get Spotify token
         let _token = hash.access_token;
 
+        //If token exists store in redux so the spotify API can always reference
         if (_token) {
             this.props.storeSpotToken(hash.access_token)
         }
