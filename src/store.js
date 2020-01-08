@@ -6,13 +6,10 @@ import rootReducer from './reducers/rootReducer';
 import promise from 'redux-promise-middleware';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-
 const composeEnhancers = composeWithDevTools({
   trace: true, 
   traceLimit: 25 
 });
-
-
 
 export default function configureStore() {
  return createStore(

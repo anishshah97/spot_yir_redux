@@ -4,13 +4,14 @@ import { fetchPlaylists, fetchMe } from "../actions/Spotify";
 import SpotifyWebApi from 'spotify-web-api-js'
 import Sidebar from "react-sidebar";
 import MaterialTitlePanel from "../components/MaterialPanel";
-import SidebarContent from "./SideBarContent";
+import SidebarContent from "../containers/SideBarContent";
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 import Button from '@material-ui/core/Button';
-import SavedSongsPage from "../pages/SavedSongsPage"
-import PlaylistPage from "../pages/PlaylistPage"
+import SavedSongsPage from "../subpages/SavedSongsPage"
+import PlaylistPage from "../subpages/PlaylistPage"
 
+//TODO: Move styles to seperate file
 const styles = {
   contentHeaderMenuLink: {
     textDecoration: "none",
@@ -22,15 +23,17 @@ const styles = {
   }
 };
 
+//Green spotify color scheme for material ui components
 const theme = createMuiTheme({
     palette: {
       primary: green,
     },
   });
 
+//Responsive resizing for react sidebar
+// TODO: Pass to all components so better responsive handlings
 const mql = window.matchMedia(`(min-width: 800px)`);
 
-//Is component did mount best for redux?
 export class Main extends Component {
 
     constructor(props) {
@@ -45,14 +48,14 @@ export class Main extends Component {
         this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
         this.toggleOpen = this.toggleOpen.bind(this);
         this.onSetOpen = this.onSetOpen.bind(this);
+        this.renderContentHeader = this.renderContentHeader.bind(this)
     }
 
     async componentDidMount() {
         if(this.props.Spotify.spot_token !== ""){
-            //Are the awaits necessary? Need to deal with too many api requests
-            await this.state.spotAPI.setAccessToken(this.props.Spotify.spot_token)
-            await this.props.fetchPlaylists(this.state.spotAPI)
-            await this.props.fetchMe(this.state.spotAPI)
+            await this.state.spotAPI.setAccessToken(this.props.Spotify.spot_token) //Wait to set the spotify access token
+            await this.props.fetchPlaylists(this.state.spotAPI) //Then fetch playlists
+            await this.props.fetchMe(this.state.spotAPI) //And your own details
         }
     }
     
@@ -82,27 +85,33 @@ export class Main extends Component {
             ev.preventDefault();
         }
     }
+
+    renderContentHeader() {
+        return(
+            <span>
+                
+                {/* Button to toggle the sidebar once the size is small enough to be dockable */}
+                {!this.state.docked && (
+                <ThemeProvider theme={theme}>
+                    <Button
+                        onClick={this.toggleOpen}
+                        style={styles.contentHeaderMenuLink}
+                        variant="contained" 
+                        color="primary"
+                    >
+                        =
+                    </Button>
+                </ThemeProvider>
+                )}
+    
+                <span>Spotify Secret Social <small>(tracked)</small></span>
+            </span>
+        );
+    }
     
     render() {
         const sidebar = <SidebarContent />;
-    
-        const contentHeader = (
-        <span>
-            {!this.state.docked && (
-            <ThemeProvider theme={theme}>
-                <Button
-                    onClick={this.toggleOpen}
-                    style={styles.contentHeaderMenuLink}
-                    variant="contained" 
-                    color="primary"
-                >
-                    =
-                </Button>
-            </ThemeProvider>
-            )}
-            <span>Spotify Secret Social <small>(tracked)</small></span>
-        </span>
-        );
+        const contentHeader = this.renderContentHeader()
     
         const sidebarProps = {
             sidebar,
@@ -110,6 +119,9 @@ export class Main extends Component {
             open: this.state.open,
             onSetOpen: this.onSetOpen
         };
+
+        const {playlist_selection} = this.props.Playlists
+        const _token = this.state.spotAPI.getAccessToken()
     
         return (
         // Sidebar with own styles in content, uses same material title
@@ -117,10 +129,15 @@ export class Main extends Component {
             {/* Main Header */}
             <ThemeProvider theme={theme}>
                 <MaterialTitlePanel title={contentHeader}> 
-                {/* Use playlist selection as a flag? */}
                 <div style={styles.content}>
-                    {this.props.Playlists.playlist_selection === "" && this.state.spotAPI.getAccessToken() !== null && (<SavedSongsPage spotAPI={this.state.spotAPI}></SavedSongsPage>)}
-                    {this.props.Playlists.playlist_selection !== "" && this.state.spotAPI.getAccessToken() !== null && (<PlaylistPage spotAPI={this.state.spotAPI}></PlaylistPage>)}
+                    {/* Check to see if token was properly passed, if not return error page */}
+                    {_token ? 
+                    /* If working token then check to see if user selected a playlist or not and route to proper subpage */
+                        (playlist_selection === "" ? 
+                            (<SavedSongsPage spotAPI={this.state.spotAPI}></SavedSongsPage>)
+                            :(<PlaylistPage spotAPI={this.state.spotAPI}></PlaylistPage>))
+                        :(<h1>NOT LOGGED IN ERROR</h1>)
+                    }
                 </div>
                 </MaterialTitlePanel>
             </ThemeProvider>

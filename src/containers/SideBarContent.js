@@ -41,11 +41,41 @@ const theme = createMuiTheme({
 
 export class SideBarContent extends Component {
 
+  constructor(props) {
+    super(props)
+    this.generatePlaylistCards.bind(this)
+  }
+  
+
   handleClick(){
     this.props.storePlaylistSelection("")
   }
+
+  generatePlaylistCards(){
+    var links = this.props.Playlists.followed_playlists.map(
+      function(item){
+        return (
+          {
+            image: item.images,
+            id: item.id,
+            name: item.name,
+            total_tracks: item.tracks.total
+          }
+        )
+      }
+    ).map(
+      function(playlist){
+        return(
+          <PlaylistMediaCard data={playlist}></PlaylistMediaCard>
+        )
+      }
+    )
+
+    return(links)
+  }
   
   render() {
+    // TODO: Replace with better loader animation/lottie
     if(this.props.Playlists.followed_playlists.length === 0){
       return (<FullPageLoading></FullPageLoading>)
     }
@@ -54,25 +84,7 @@ export class SideBarContent extends Component {
       ? { ...styles.sidebar, ...this.props.style }
       : styles.sidebar;
 
-      let links = this.props.Playlists.followed_playlists.map(
-        function(item){
-          return (
-            {
-              image: item.images,
-              id: item.id,
-              name: item.name,
-              total_tracks: item.tracks.total
-            }
-          )
-        }
-      ).map(
-        function(playlist){
-          return(
-            <PlaylistMediaCard data={playlist}></PlaylistMediaCard>
-          )
-        }
-      )
-
+      var links = this.generatePlaylistCards()
 
       return (
           <MaterialTitlePanel title="Menu" style={style}>

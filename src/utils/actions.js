@@ -49,22 +49,25 @@ export function prepareCalendarData(tracks) {
     return({cal_data: counts, max_date: max_date, min_date: min_date, up_bound: out_upperBound})
 }
 
-//Remove awaits? Make better asynchronous somehow
-export async function getSavedTrackList(spotifyAPIHandler) {
-    var options = {limit: 50}
-    return(await spotifyAPIHandler.getMySavedTracks(options = options)
+//TODO: Better define params that need to be passed to the function
+async function collectAPIresp(spot_func, limit=50, args = {}){
+    var options = {limit, offset: 0}
+    return(await spot_func(options)
     .then(async (resp) => {
-        options.offset = 0
         const results = []
         results.push(resp.items)
         while (resp.next) {
-            options.offset = resp.offset+50
-            resp = await spotifyAPIHandler.getMySavedTracks(options = options)
+            options.offset = resp.offset+limit
+            resp = await spot_func(options)
             results.push(resp.items);
         }
-        var saved_tracks = [].concat.apply([], results)
-        return saved_tracks
+    var tot_resp = [].concat.apply([], results)
+    return tot_resp
     }))
+}
+
+export async function getSavedTrackList(spotifyAPIHandler) {
+    return(await collectAPIresp(spotifyAPIHandler.getMySavedTracks))
 }
 
 //General enough for use of any raw input of list of selected saved songs
@@ -117,33 +120,27 @@ export async function collectTrackStats(handler, tracks, pid = null) {
 
 //Remove awaits? Make better asynchronous somehow
 export async function getPlaylists(spotifyAPIHandler) {
-    var options = {limit: 50, offset: 0}
-    return(await spotifyAPIHandler.getUserPlaylists(options = options)
-    .then(async (resp) => {
-        const results = []
-        results.push(resp.items)
-        while (resp.next) {
-            options.offset = resp.offset+50
-            resp = await spotifyAPIHandler.getUserPlaylists(options = options)
-            results.push(resp.items);
-        }
-        var followed_playlists = [].concat.apply([], results)
+    return(await collectAPIresp(spotifyAPIHandler.getUserPlaylists)
+    .then(tot_resp => {
+        var followed_playlists = tot_resp.map(playlist => {
+            playlist['pid'] = playlist['id']
+            return playlist
+        })
         return followed_playlists
     }))
 }
 
-export async function getPlaylistTracks(handler, playlist, pid) {
-    //inefficient search through all track elemtns to find matching pids but meh
-    
+//Need to pass pid parameter to collect API response function how to generalize?
+export async function getPlaylistTracks(handler, playlist, pid) {    
     async function collectPlaylistTracks(playlist, handler, pid){
         var options = {limit: 100, offset: 0}
-        return await handler.getPlaylistTracks(pid, options=options)
+        return await handler.getPlaylistTracks(pid, options)
         .then(async function (resp){
             const results = []
             results.push(resp.items)
             while (resp.next) {
                 options.offset = resp.offset+100
-                resp = await handler.getPlaylistTracks(pid, options = options)
+                resp = await handler.getPlaylistTracks(pid, options)
                 results.push(resp.items);
             }
             var playlist_tracks = [].concat.apply([], results)
@@ -151,9 +148,6 @@ export async function getPlaylistTracks(handler, playlist, pid) {
         })
     }
     let playlist_tracks = collectPlaylistTracks(playlist, handler, pid)
-    //console.log(playlist_tracks)
-
-    //Add in a step to add ID for easy looking?
 
     return(playlist_tracks.then(data => data))
 }

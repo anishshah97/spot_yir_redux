@@ -8,8 +8,7 @@ import {storePlaylistSelection} from "../actions/DataFormat"
 import {connect} from "react-redux"
 import React, { Component } from 'react'
 
-
-
+//TODO: Move styles to a separate file
 const styles = {
   card: {
       maxWidth: 345
@@ -25,33 +24,27 @@ const styles = {
 };
 
 export class PlaylistMediaCard extends Component {
-  constructor(props) {
-    super(props)
-  
-    this.state = {
-       
-    }
-  }
 
   handleClick(){
-    this.props.storePlaylistSelection(this.props.data.id)
+    const{id} = this.props.data
+    this.props.storePlaylistSelection(id)
   }
   
 
   render() {
     const { classes, data} = this.props;
-
+    const {playlist_tracks_loading, playlist_track_info_loading} = this.props.Playlists
     return (
       <div>
         <Card className={classes.card}>
           <ButtonBase 
             className={classes.cardButton} 
             onClick={this.handleClick.bind(this)}
-            disabled={this.props.Playlists.playlist_tracks_loading || this.props.Playlists.playlist_track_info_loading}
+            disabled={playlist_tracks_loading || playlist_track_info_loading}
           >
             <CardMedia
               className={classes.media}
-              image={data.image[0] ? data.image[0].url : ""} //Throws error bc cant be blank, need better default
+              image={data.image[0] ? data.image[0].url : ""} //TODO: Throws error bc image cant be blank, need better default value
               title={data.name}
             />
             <CardContent>
@@ -59,8 +52,6 @@ export class PlaylistMediaCard extends Component {
                 {data.name}
               </Typography>
               {/* <Typography component="p">
-                Lizards are a widespread group of squamate reptiles, with over
-                6,000 species, ranging across all continents except Antarctica
               </Typography> */}
             </CardContent>
           </ButtonBase>

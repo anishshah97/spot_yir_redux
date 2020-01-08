@@ -1,23 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
 import { storeSpotToken } from "../actions/Spotify";
-//import { authEndpoint, clientId, redirectUri, scopes } from "../utils/spotify_config";
 import hash from "../utils/token_hash"
 import Button from '@material-ui/core/Button';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
 
-
+//Green color theme to match Spotify
+// TODO: Properly define a color scheme, wrap around whole App
+// TODO: Move styles to separate file
 const theme = createMuiTheme({
     palette: {
       primary: green,
     },
   });
-//Is component did mount best for redux?
-export class Login extends Component {
+
+const spotAuthLink = `${process.env.REACT_APP_SPOT_AUTH_END}?client_id=${process.env.REACT_APP_SPOT_CLID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=${process.env.REACT_APP_SPOT_SCOPES}&response_type=token&show_dialog=true`
+
+  export class Login extends Component {
     componentDidMount() {
+        //Read spotify token from window after redirect and store in redux
         let _token = hash.access_token;
 
+        //If token exists store in redux so the spotify API can always reference
         if (_token) {
             this.props.storeSpotToken(hash.access_token)
         }
@@ -30,8 +35,8 @@ export class Login extends Component {
                     <Button 
                         variant="contained" 
                         color="primary"
-                        href={`${process.env.REACT_APP_SPOT_AUTH_END}?client_id=${process.env.REACT_APP_SPOT_CLID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=${process.env.REACT_APP_SPOT_SCOPES}&response_type=token&show_dialog=true`}
-                        onClick = {storeSpotToken}
+                        href={spotAuthLink}
+                        onClick={storeSpotToken}
                     >
                     Login to Spotify
                     </Button>

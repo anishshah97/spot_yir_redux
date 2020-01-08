@@ -27,6 +27,12 @@ const styles = StyleSheet.create({
 //Send request for track details here? or in main container. probs main container for now lmao
 export class SongGrid extends Component {
 
+    constructor(props) {
+        super(props)
+        this.generateSongCards.bind(this)
+    }
+    
+
     //Move to redux data for processing into other graphs no need to do same code
     sortIDs(track_info, sort_sel, dir){
         switch(dir){
@@ -65,8 +71,6 @@ export class SongGrid extends Component {
         var order = {};
         var sortedTrackURIChunks = null
 
-        
-
         if(tracks.length!==0 && sortedTrackInfo.length!==0){
             sortedTrackInfo.forEach(function (a, i) { order[a.id] = i; });
             tracks.sort(function (a, b) {
@@ -80,30 +84,33 @@ export class SongGrid extends Component {
 
     }
 
+    generateSongCards(tracks){
+        /* Display tracks in cards */ 
+        return(<div className ={css(styles.root)}>
+            <GridList cellHeight={180} cols={6} className={css(styles.gridList)}>
+                {/* <GridListTile key="Subheader" cols={6} style={{ height: 'auto' }}>
+                    <ListSubheader component="div">{this.props.playlist.name}</ListSubheader>
+                </GridListTile> */}
+                {tracks.map(track => 
+                    <GridListTile key={track.track.id} cols={1}>
+                        <img src={track.track.album.images[0] ? track.track.album.images[0].url : ""} alt={track.track.name} />
+                        <GridListTileBar
+                            title={track.track.name}
+                        />
+                    </GridListTile>
+                )}
+            </GridList>
+        </div>)
+    }
+
     render() {
-        const{ sort_sel, sort_dir, tracks, sortedTrackInfo, sortedTrackURIChunks } = this.renderData()     
+        const{ sort_sel, sort_dir, tracks, sortedTrackInfo, sortedTrackURIChunks } = this.renderData()
+        var songCards = this.generateSongCards(tracks)     
         return (
             <div>
                 <PlaylistSorter></PlaylistSorter>
                 <PlaylistOverviewGraph sortedTrackInfo = {sortedTrackInfo}></PlaylistOverviewGraph>
-
-                {/* Display tracks in cards */}
-                <div className ={css(styles.root)}>
-                    <GridList cellHeight={180} cols={6} className={css(styles.gridList)}>
-                        {/* <GridListTile key="Subheader" cols={6} style={{ height: 'auto' }}>
-                            <ListSubheader component="div">{this.props.playlist.name}</ListSubheader>
-                        </GridListTile> */}
-                        {tracks.map(track => 
-                            <GridListTile key={track.track.id} cols={1}>
-                                <img src={track.track.album.images[0] ? track.track.album.images[0].url : ""} alt={track.track.name} />
-                                <GridListTileBar
-                                    title={track.track.name}
-                                />
-                            </GridListTile>
-                        )}
-                    </GridList>
-                </div>
-                
+                {songCards}
                 <PlaylistCreator 
                     name = {sort_sel+"_"+sort_dir+"_"+this.props.playlist.name}
                     spotAPI={this.props.spotAPI}
