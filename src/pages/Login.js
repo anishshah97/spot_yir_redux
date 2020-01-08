@@ -36,7 +36,7 @@ const spotAuthLink = `${process.env.REACT_APP_SPOT_AUTH_END}?client_id=${process
                         variant="contained" 
                         color="primary"
                         href={spotAuthLink}
-                        onClick = {storeSpotToken}
+                        onClick={storeSpotToken}
                     >
                     Login to Spotify
                     </Button>
