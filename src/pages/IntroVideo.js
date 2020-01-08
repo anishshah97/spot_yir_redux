@@ -40,9 +40,10 @@ export class IntroVideo extends Component {
 
     render() {
         const {toggleVideoEnd} = this.props
+        
         return (
             <div className={css(styles.player)} >
-                <div className = {css(styles.skip)} onClick={toggleVideoEnd}>
+                <div className={css(styles.skip)} onClick={toggleVideoEnd}>
                     <Lottie options={skipAni} {...staticLottieProps}/>
                 </div>
                 <ReactPlayer 

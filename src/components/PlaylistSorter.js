@@ -23,6 +23,7 @@ export class PlaylistSorter extends Component {
         var sort_dir = this.props.Data.sort_direction
         return (
             //TODO: Create general sort class that takes onChange handler prop and FormControlLabel mapper {key: value}
+            //TODO: Loader?
             <div>
                     <div>
                         <FormControl component="fieldset">

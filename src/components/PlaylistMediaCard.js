@@ -26,19 +26,21 @@ const styles = {
 export class PlaylistMediaCard extends Component {
 
   handleClick(){
-    this.props.storePlaylistSelection(this.props.data.id)
+    const{id} = this.props.data
+    this.props.storePlaylistSelection(id)
   }
   
 
   render() {
     const { classes, data} = this.props;
+    const {playlist_tracks_loading, playlist_track_info_loading} = this.props.Playlists
     return (
       <div>
         <Card className={classes.card}>
           <ButtonBase 
             className={classes.cardButton} 
             onClick={this.handleClick.bind(this)}
-            disabled={this.props.Playlists.playlist_tracks_loading || this.props.Playlists.playlist_track_info_loading}
+            disabled={playlist_tracks_loading || playlist_track_info_loading}
           >
             <CardMedia
               className={classes.media}

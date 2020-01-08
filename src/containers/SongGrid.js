@@ -71,8 +71,6 @@ export class SongGrid extends Component {
         var order = {};
         var sortedTrackURIChunks = null
 
-        
-
         if(tracks.length!==0 && sortedTrackInfo.length!==0){
             sortedTrackInfo.forEach(function (a, i) { order[a.id] = i; });
             tracks.sort(function (a, b) {

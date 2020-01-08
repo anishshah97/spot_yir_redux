@@ -3,14 +3,17 @@ import { connect } from "react-redux";
 import { ResponsiveLine } from '@nivo/line'
 import { StyleSheet, css } from 'aphrodite';
 
+//TODO: Move styles to separate file
 const styles = StyleSheet.create({
     size_cont: {
       height: 700
     }
 })
 
+//TODO: Create toggle/checkboxes to display selected metrics
 
 /* Display all values together on graph
+
 var line_data = legend.map(metric => {
             var values = this.props.sortedTrackInfo.map(track => {
                 return(
@@ -121,8 +124,8 @@ export class PlaylistOverviewGraph extends Component {
         var values = this.props.sortedTrackInfo.map(track => {
             var metric = this.props.Data.sort_selection
             return(
-                {"x": track.name,
-                 "y": track[metric]}
+                {"x": track.name, //TODO: Track.name as what is shown on graph but Track.id as what it is actually set as bc sorting on name causes mismatch issues with songs of the same name
+                 "y": track[metric]} 
             )
         })
         var line_data = [{

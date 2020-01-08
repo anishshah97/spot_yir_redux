@@ -67,8 +67,7 @@ async function collectAPIresp(spot_func, limit=50, args = {}){
 }
 
 export async function getSavedTrackList(spotifyAPIHandler) {
-    return(await collectAPIresp(spotifyAPIHandler.getMySavedTracks)
-)
+    return(await collectAPIresp(spotifyAPIHandler.getMySavedTracks))
 }
 
 //General enough for use of any raw input of list of selected saved songs
@@ -131,7 +130,7 @@ export async function getPlaylists(spotifyAPIHandler) {
     }))
 }
 
-//Need to pass pid parameter to function how to generalize?
+//Need to pass pid parameter to collect API response function how to generalize?
 export async function getPlaylistTracks(handler, playlist, pid) {    
     async function collectPlaylistTracks(playlist, handler, pid){
         var options = {limit: 100, offset: 0}

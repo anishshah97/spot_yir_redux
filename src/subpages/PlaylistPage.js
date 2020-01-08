@@ -38,6 +38,7 @@ export class PlaylistPage extends Component {
             const {playlist_tracks_loading, playlist_tracks_success} = this.props.Playlists
             const {playlist_track_info_loading, playlist_track_info_success} = this.props.Playlists
 
+            //TODO: Better logic to check status of the requested tracks and info before requesting
             if(!playlist_tracks_loading && !playlist_tracks_success
                 && !playlist_track_info_loading && !playlist_track_info_success ){
                 await this.getFullData()
