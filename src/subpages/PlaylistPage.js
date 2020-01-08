@@ -8,6 +8,12 @@ import FullPageLoading from "../components/FullPageLoading"
 
 export class PlaylistPage extends Component {
 
+    constructor(props) {
+        super(props)
+        this.findPlaylist.bind(this)
+    }
+    
+
     async componentDidMount() {
         await this.checkCachedPlaylists()
     }
@@ -23,50 +29,70 @@ export class PlaylistPage extends Component {
     }
 
     async checkCachedPlaylists(){
-        var tracks = _.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection})
-        var track_info = _.find(this.props.Playlists.playlist_track_info, {pid: this.props.Playlists.playlist_selection})
+        const {playlist_tracks, playlist_track_info} = this.props.Playlists
+
+        var tracks = this.findPlaylist(playlist_tracks)
+        var track_info = this.findPlaylist(playlist_track_info)
 
         if(!tracks || !track_info){
-            if(!this.props.Playlists.playlist_tracks_loading && !this.props.Playlists.playlist_tracks_success
-                && !this.props.Playlists.playlist_track_info_loading && !this.props.Playlists.playlist_track_info_success ){
+            const {playlist_tracks_loading, playlist_tracks_success} = this.props.Playlists
+            const {playlist_track_info_loading, playlist_track_info_success} = this.props.Playlists
+
+            if(!playlist_tracks_loading && !playlist_tracks_success
+                && !playlist_track_info_loading && !playlist_track_info_success ){
                 await this.getFullData()
             }
         }
         else{
-            //Side effect of one extra call after it calls itself because it induces an update that will run back into itself
+            // TODO: fix Side effect of one extra call after it calls itself because it induces an update that will run back into itself
             await this.props.markFoundPlaylist()
         }
     }
+
+    //Will read from store in function instead of passing into for now
+    findPlaylist(playlist_arr){
+        const {playlist_selection} = this.props.Playlists
+        return(_.find(playlist_arr, {pid: playlist_selection}))
+    }
     
+    //TODO: Save data to state to pass to components for more logical data routing
     async getFullData() {
-        var chosen_playlist = _.find(this.props.Playlists.followed_playlists, {id: this.props.Playlists.playlist_selection})
+        const{followed_playlists, playlist_selection} = this.props.Playlists
+        const {spotAPI} = this.props
+        var chosen_playlist = this.findPlaylist(followed_playlists)
+
         await this.props.fetchPlaylistTracks(
-            this.props.spotAPI, 
+            spotAPI, 
             chosen_playlist,
-            this.props.Playlists.playlist_selection)
-        
-        var playlist_tracks = _.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection})
+            playlist_selection)
+
+        const {playlist_tracks} = this.props.Playlists
+        var chosen_playlist_tracks = this.findPlaylist(playlist_tracks)
         if(playlist_tracks){
             await this.props.fetchPlaylistTrackInfo(
-                this.props.spotAPI, 
-                playlist_tracks.data,
-                this.props.Playlists.playlist_selection)
+                spotAPI, 
+                chosen_playlist_tracks.data,
+                playlist_selection)
         }
     }
 
+
+
     render() {
-        //Move loaders at the container level?
-        if(!this.props.Playlists.playlist_tracks_success || !this.props.Playlists.playlist_track_info_success){
+        const{playlist_tracks_success, playlist_track_info_success, followed_playlists, playlist_tracks, playlist_track_info} = this.props.Playlists
+        const{spotAPI} = this.props
+        // TODO: Move loaders at the container level?
+        if(!playlist_tracks_success || !playlist_track_info_success){
             return (<FullPageLoading></FullPageLoading>)
         }
         else{
             return (
                 <div>
                     <SongGrid 
-                            playlist={_.find(this.props.Playlists.followed_playlists, {id: this.props.Playlists.playlist_selection})}
-                            spotAPI={this.props.spotAPI}
-                            rawTracks={_.find(this.props.Playlists.playlist_tracks, {pid: this.props.Playlists.playlist_selection})}
-                            rawTrackInfo={_.find(this.props.Playlists.playlist_track_info, {pid: this.props.Playlists.playlist_selection})}
+                            playlist={this.findPlaylist(followed_playlists)}
+                            spotAPI={spotAPI}
+                            rawTracks={this.findPlaylist(playlist_tracks)}
+                            rawTrackInfo={this.findPlaylist(playlist_track_info)}
                     ></SongGrid>
                 </div>
             )

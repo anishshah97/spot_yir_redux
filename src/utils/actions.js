@@ -128,6 +128,11 @@ export async function getPlaylists(spotifyAPIHandler) {
             results.push(resp.items);
         }
         var followed_playlists = [].concat.apply([], results)
+        //Add pid to generalize cache lookup on pid field for playlist selections
+        followed_playlists = followed_playlists.map(playlist => {
+            playlist['pid'] = playlist['id']
+            return playlist
+        })
         return followed_playlists
     }))
 }

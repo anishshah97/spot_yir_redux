@@ -8,7 +8,6 @@ import {storePlaylistSelection} from "../actions/DataFormat"
 import {connect} from "react-redux"
 import React, { Component } from 'react'
 
-
 //TODO: Move styles to a separate file
 const styles = {
   card: {
