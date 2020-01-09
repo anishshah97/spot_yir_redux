@@ -94,7 +94,7 @@ export class SideBarContent extends Component {
                   style={styles.sidebarLink}
                   variant="contained" 
                   color="primary"
-                  onClick = {this.handleClick.bind(this)}
+                  onClick={this.handleClick.bind(this)}
                 >
                   Home
                 </Button>

@@ -73,7 +73,7 @@ export class SavedCalendar extends Component {
                             data={this.props.Data.cal_data}
                             from={min_date}
                             to={max_date}
-                            maxValue = {this.props.Data.up_bound}
+                            maxValue={this.props.Data.up_bound}
                             {...commonGraphProps}
                         />
                     </div>
