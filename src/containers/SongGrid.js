@@ -86,7 +86,7 @@ export class SongGrid extends Component {
 
     generateSongCards(tracks){
         /* Display tracks in cards */ 
-        return(<div className ={css(styles.root)}>
+        return(<div className={css(styles.root)}>
             <GridList cellHeight={180} cols={6} className={css(styles.gridList)}>
                 {/* <GridListTile key="Subheader" cols={6} style={{ height: 'auto' }}>
                     <ListSubheader component="div">{this.props.playlist.name}</ListSubheader>
@@ -109,12 +109,12 @@ export class SongGrid extends Component {
         return (
             <div>
                 <PlaylistSorter></PlaylistSorter>
-                <PlaylistOverviewGraph sortedTrackInfo = {sortedTrackInfo}></PlaylistOverviewGraph>
+                <PlaylistOverviewGraph sortedTrackInfo={sortedTrackInfo}></PlaylistOverviewGraph>
                 {songCards}
                 <PlaylistCreator 
-                    name = {sort_sel+"_"+sort_dir+"_"+this.props.playlist.name}
+                    name={sort_sel+"_"+sort_dir+"_"+this.props.playlist.name}
                     spotAPI={this.props.spotAPI}
-                    track_chunks = {sortedTrackURIChunks}
+                    track_chunks={sortedTrackURIChunks}
                 > 
                 </PlaylistCreator>
             </div>

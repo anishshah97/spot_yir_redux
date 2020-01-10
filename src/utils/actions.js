@@ -22,16 +22,16 @@ export function prepareCalendarData(tracks) {
         value: ungrouped_data.filter(item => item.day === day).length
         //items: ungrouped_data.filter(item => item.day === day)
         }));
-    
-    var max_date = new Date(Math.max.apply(null, counts.map(function(count){
-        var date_obj = new Date(count.day)
-        return date_obj
-    })))
 
-    var min_date = new Date(Math.min.apply(null, counts.map(function(count){
-        var date_obj = new Date(count.day)
-        return date_obj
-    })))
+    function date_selector(func, counts){
+        return(new Date(func.apply(null, counts.map(function(count){
+            var date_obj = new Date(count.day)
+            return date_obj
+        }))))
+    }
+    
+    var max_date = date_selector(Math.max, counts)
+    var min_date = date_selector(Math.min, counts)
 
     var s = new Stats().push(counts.map(item => item.value))
     // var q1 = s.percentile(25)
@@ -118,12 +118,11 @@ export async function collectTrackStats(handler, tracks, pid = null) {
     
 }
 
-//Remove awaits? Make better asynchronous somehow
 export async function getPlaylists(spotifyAPIHandler) {
     return(await collectAPIresp(spotifyAPIHandler.getUserPlaylists)
     .then(tot_resp => {
         var followed_playlists = tot_resp.map(playlist => {
-            playlist['pid'] = playlist['id']
+            playlist['pid'] = playlist['id'] //Rename the id field to pid for more general/cleaner lookup function
             return playlist
         })
         return followed_playlists
