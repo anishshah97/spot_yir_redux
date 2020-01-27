@@ -20,6 +20,12 @@ export default (state = {
     playlist_track_info_loading: false,
     playlist_track_info_error: false,
     playlist_track_info_success: false,
+
+    //My Playlist Artists info
+    playlist_artists : [],
+    playlist_artists_loading: false,
+    playlist_artists_error: false,
+    playlist_artists_success: false,
     
   }, action) => {
     switch (action.type) {
@@ -105,6 +111,26 @@ export default (state = {
           playlist_track_info_loading: false,
           playlist_track_info_error: true
         })
+
+        //Deal with from promises from playlist track info
+        case "FETCH_PLAYLIST_ARTISTS_PENDING":
+          return Object.assign({}, state, {
+            playlist_artists_success: false,
+            playlist_artists_error: false,
+            playlist_artists_loading: true
+          });
+        case "FETCH_PLAYLIST_ARTISTS_FULFILLED":
+          return {
+            ...state,
+            playlist_artists : state.playlist_artists.concat(action.payload),
+            playlist_artists_loading : false,
+            playlist_artists_success: true
+          }
+        case "FETCH_PLAYLIST_ARTISTS_REJECTED":
+          return Object.assign({}, state, {
+            playlist_artists_loading: false,
+            playlist_artists_error: true
+          })
 
       
       default:

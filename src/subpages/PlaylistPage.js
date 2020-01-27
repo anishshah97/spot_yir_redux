@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import SongGrid from "../containers/SongGrid"
 import {connect} from "react-redux"
-import { fetchPlaylistTracks, fetchPlaylistTrackInfo, markFoundPlaylist } from "../actions/Spotify";
+import { fetchPlaylistTracks, fetchPlaylistTrackInfo, fetchPlaylistArtists, markFoundPlaylist } from "../actions/Spotify";
 import _ from "lodash"
 import FullPageLoading from "../components/FullPageLoading"
 
@@ -29,18 +29,21 @@ export class PlaylistPage extends Component {
     }
 
     async checkCachedPlaylists(){
-        const {playlist_tracks, playlist_track_info} = this.props.Playlists
+        const {playlist_tracks, playlist_track_info, playlist_artists} = this.props.Playlists
 
         var tracks = this.findPlaylist(playlist_tracks)
         var track_info = this.findPlaylist(playlist_track_info)
+        var artist_info = this.findPlaylist(playlist_artists)
 
-        if(!tracks || !track_info){
+        if(!tracks || !track_info || !artist_info){
             const {playlist_tracks_loading, playlist_tracks_success} = this.props.Playlists
             const {playlist_track_info_loading, playlist_track_info_success} = this.props.Playlists
+            const {playlist_artists_loading, playlist_artists_success} = this.props.Playlists
 
             //TODO: Better logic to check status of the requested tracks and info before requesting
             if(!playlist_tracks_loading && !playlist_tracks_success
-                && !playlist_track_info_loading && !playlist_track_info_success ){
+                && !playlist_track_info_loading && !playlist_track_info_success 
+                && !playlist_artists_loading && !playlist_artists_success){
                 await this.getFullData()
             }
         }
@@ -69,11 +72,17 @@ export class PlaylistPage extends Component {
 
         const {playlist_tracks} = this.props.Playlists
         var chosen_playlist_tracks = this.findPlaylist(playlist_tracks)
-        if(playlist_tracks){
+        if(chosen_playlist_tracks){
             await this.props.fetchPlaylistTrackInfo(
                 spotAPI, 
                 chosen_playlist_tracks.data,
                 playlist_selection)
+            
+            await this.props.fetchPlaylistArtists(
+                spotAPI,
+                chosen_playlist_tracks.data,
+                playlist_selection
+            )
         }
     }
 
@@ -108,6 +117,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     fetchPlaylistTracks: (handler, playlists, pid) => dispatch(fetchPlaylistTracks(handler, playlists, pid)),
     fetchPlaylistTrackInfo: (handler, tracks, pid) => dispatch(fetchPlaylistTrackInfo(handler, tracks, pid)),
+    fetchPlaylistArtists: (handler, tracks, pid) => dispatch(fetchPlaylistArtists(handler, tracks, pid)),
     markFoundPlaylist: () => dispatch(markFoundPlaylist())
   });
   

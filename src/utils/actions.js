@@ -151,6 +151,46 @@ export async function getPlaylistTracks(handler, playlist, pid) {
     return(playlist_tracks.then(data => data))
 }
 
+export async function collectArtistInfo(handler, tracks, pid = null) {
+    //PROCESS UNIQUE ARTIST ID PIDS
+    var artists_arrs = tracks.map(track => track.track.artists)
+    var full_artist_arr = [].concat.apply([], artists_arrs)
+    var artist_ids = full_artist_arr.map(artist => artist.id)
+    var unique_artist_ids = _.uniq(artist_ids)
+    //var artist_data = _.uniq([].concat.apply([], artists_arrs).map(artist => artist.id)))
+
+    async function artistAPI(artist_id_chunk){
+        //let artist_ids = artist_chunk.map(dict => dict.id) //read all the artist ids if dict with extracted data is passed
+        let artist_ids = artist_id_chunk
+        return await handler.getArtists(artist_ids)
+        .then(function (resp){
+            //Can further process here
+            return resp
+        })
+    }
+
+    function fillArtistData(resp){
+        var artist_data = [].concat.apply([], resp.map(resp => resp.artists))
+
+        //Further process here
+
+        return artist_data
+    }
+
+    let resp = Promise.all(_.chunk(unique_artist_ids, 50).map(artistAPI, {handler : handler}))
+    .then(data => fillArtistData(data))
+
+    if(pid){
+        resp = resp.then(data => {
+            var val = {pid: pid, data: data}
+            return(val)
+        })
+    }
+
+    return(resp)
+    
+}
+
 export function getMe(handler){
     return(handler.getMe())
 }
