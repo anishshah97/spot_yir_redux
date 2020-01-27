@@ -89,8 +89,15 @@ export class PlaylistPage extends Component {
 
 
     render() {
-        const{playlist_tracks_success, playlist_track_info_success, followed_playlists, playlist_tracks, playlist_track_info} = this.props.Playlists
+        const{playlist_tracks_success, playlist_track_info_success, followed_playlists, playlist_tracks, playlist_track_info, playlist_artists} = this.props.Playlists
         const{spotAPI} = this.props
+
+        var chosen_playlist = this.findPlaylist(followed_playlists)
+        var chosen_tracks = this.findPlaylist(playlist_tracks)
+        var chosen_track_info = this.findPlaylist(playlist_track_info)
+        var chosen_artists = this.findPlaylist(playlist_artists)
+
+        
         // TODO: Move loaders at the container level?
         if(!playlist_tracks_success || !playlist_track_info_success){
             return (<FullPageLoading></FullPageLoading>)
@@ -99,10 +106,11 @@ export class PlaylistPage extends Component {
             return (
                 <div>
                     <SongGrid 
-                            playlist={this.findPlaylist(followed_playlists)}
+                            playlist={chosen_playlist}
                             spotAPI={spotAPI}
-                            rawTracks={this.findPlaylist(playlist_tracks)}
-                            rawTrackInfo={this.findPlaylist(playlist_track_info)}
+                            rawTracks={chosen_tracks}
+                            rawTrackInfo={chosen_track_info}
+                            rawArtistInfo={chosen_artists}
                     ></SongGrid>
                 </div>
             )

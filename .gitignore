@@ -23,3 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 src/utils/spotify_config.js
 .env
+
+/test_data
