@@ -18,7 +18,7 @@
     "fast-stats": "0.0.5",
     "jest": "^24.9.0",
     "jest-fetch-mock": "^2.1.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-animations": "^1.0.0",
